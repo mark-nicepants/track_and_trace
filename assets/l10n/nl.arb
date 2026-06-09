@@ -59,5 +59,17 @@
   "dumpSizeFull": "Hele bak",
   "dumpSizeUnspecified": "Niet gespecificeerd",
   "dumpSizeConfirm": "Bevestigen",
-  "dumpSizeDismiss": "Afwijzen"
+  "dumpSizeDismiss": "Afwijzen",
+
+  "crashDetectedTitle": "Crash gedetecteerd",
+  "crashBody": "Het lijkt er op dat de applicatie is gecrasht. Wilt u een crash rapport versturen?",
+  "crashYes": "Ja",
+  "crashNo": "Nee",
+  "crashClose": "Sluiten",
+  "crashTryAgain": "Opnieuw",
+  "crashGettingLogFiles": "Log bestanden ophalen",
+  "crashZippingFiles": "Bestanden comprimeren",
+  "crashSendingReport": "Crash rapport versturen",
+  "crashSentSuccessfully": "Crash rapport met success verstuurd!",
+  "crashFailed": "Crash rapport versturen mislukt."
 }

@@ -158,5 +158,41 @@
   "dumpSizeDismiss": "Afwijzen",
   "@dumpSizeDismiss": {
     "description": "DumpSizeDialog dismiss button. Dutch verbatim per FEATURES.md §12."
+  },
+
+  "crashDetectedTitle": "Crash gedetecteerd",
+  "@crashDetectedTitle": {
+    "description": "Crash report screen title. Dutch verbatim per FEATURES.md §12 (mirrors Android `crash_detected`)."
+  },
+  "crashBody": "Het lijkt er op dat de applicatie is gecrasht. Wilt u een crash rapport versturen?",
+  "@crashBody": {
+    "description": "Crash report prompt body. Dutch verbatim per FEATURES.md §12 (mirrors Android `application_crash`)."
+  },
+  "crashYes": "Ja",
+  "crashNo": "Nee",
+  "crashClose": "Sluiten",
+  "crashTryAgain": "Opnieuw",
+  "@crashTryAgain": {
+    "description": "Retry button on the failed upload view. Dutch verbatim per FEATURES.md §12 (mirrors Android `try_again`)."
+  },
+  "crashGettingLogFiles": "Log bestanden ophalen",
+  "@crashGettingLogFiles": {
+    "description": "Progress label while collecting logs. Dutch verbatim per FEATURES.md §12."
+  },
+  "crashZippingFiles": "Bestanden comprimeren",
+  "@crashZippingFiles": {
+    "description": "Progress label while zipping. Dutch verbatim per FEATURES.md §12."
+  },
+  "crashSendingReport": "Crash rapport versturen",
+  "@crashSendingReport": {
+    "description": "Progress label while uploading. Dutch verbatim per FEATURES.md §12."
+  },
+  "crashSentSuccessfully": "Crash rapport met success verstuurd!",
+  "@crashSentSuccessfully": {
+    "description": "Success message after upload. Dutch verbatim per FEATURES.md §12."
+  },
+  "crashFailed": "Crash rapport versturen mislukt.",
+  "@crashFailed": {
+    "description": "Failure message after upload (Dutch translation of Android's `Sent Crash Report failed.`)."
   }
 }

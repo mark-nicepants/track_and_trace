@@ -54,7 +54,8 @@ class PredictionService implements IPredictionService {
   Future<void> stop() async {
     if (!_running) return;
     _running = false;
-    _wake?.complete();
+    final wake = _wake;
+    if (wake != null && !wake.isCompleted) wake.complete();
     _wake = null;
     final loop = _loopFuture;
     _loopFuture = null;

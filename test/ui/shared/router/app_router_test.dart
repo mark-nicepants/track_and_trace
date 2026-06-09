@@ -1,9 +1,11 @@
 import 'package:app/data/services/in_memory_permission_service.dart';
 import 'package:app/data/services/in_memory_preference_service.dart';
 import 'package:app/shared/contracts/i_permission_service.dart';
+import 'package:app/ui/features/crash/crash_page.dart';
 import 'package:app/ui/features/setup/setup_keys.dart';
 import 'package:app/ui/features/setup/setup_page.dart';
 import 'package:app/ui/features/setup_permissions/setup_permissions_page.dart';
+import 'package:app/ui/features/tracking/tracking_keys.dart';
 import 'package:app/ui/features/tracking/tracking_page.dart';
 import 'package:app/ui/shared/l10n/generated/app_localizations.dart';
 import 'package:app/ui/shared/l10n/l10n.dart';
@@ -77,6 +79,18 @@ void main() {
       expect(find.byType(TrackingPage), findsOneWidget);
       expect(find.byType(SetupPage), findsNothing);
       expect(find.byType(SetupPermissionsPage), findsNothing);
+    });
+
+    testWidgets('EXITED_CORRECTLY=false → /crash', (tester) async {
+      final prefs = InMemoryPreferenceService();
+      await prefs.writeString(exitedCorrectlyKey, 'false');
+      await setupTestDi(prefs: prefs, permissions: _granted());
+
+      await _pumpRouter(tester);
+
+      expect(find.byType(CrashPage), findsOneWidget);
+      expect(find.byType(SetupPage), findsNothing);
+      expect(find.byType(TrackingPage), findsNothing);
     });
 
     testWidgets('redirect only fires from the MainPage path (no infinite loop)', (tester) async {

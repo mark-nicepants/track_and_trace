@@ -1,3 +1,5 @@
+import 'package:app/ui/features/crash/crash_detected_provider.dart';
+import 'package:app/ui/features/crash/crash_page.dart';
 import 'package:app/ui/features/main/main_page.dart';
 import 'package:app/ui/features/setup/setup_page.dart';
 import 'package:app/ui/features/setup/setup_saved_provider.dart';
@@ -16,6 +18,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
   ref.listen<AsyncValue<PermissionsState>>(permissionsProvider, (_, _) => refresh.value++);
   ref.listen<AsyncValue<bool>>(setupSavedProvider, (_, _) => refresh.value++);
+  ref.listen<AsyncValue<bool>>(crashDetectedAtLaunchProvider, (_, _) => refresh.value++);
 
   return GoRouter(
     initialLocation: MainPage.path,
@@ -26,8 +29,11 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       final perms = ref.read(permissionsProvider);
       final setupDone = ref.read(setupSavedProvider);
+      final crashDetected = ref.read(crashDetectedAtLaunchProvider);
 
-      if (perms.isLoading || setupDone.isLoading) return null;
+      if (perms.isLoading || setupDone.isLoading || crashDetected.isLoading) return null;
+
+      if (crashDetected.value == true) return CrashPage.path;
 
       final allGranted = perms.value?.allGranted ?? false;
       if (!allGranted) return SetupPermissionsPage.path;

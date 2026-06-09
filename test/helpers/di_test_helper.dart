@@ -11,6 +11,7 @@ import 'package:app/data/services/noop_logger.dart';
 import 'package:app/shared/clock.dart';
 import 'package:app/shared/config/app_env.dart';
 import 'package:app/shared/contracts/i_connectivity_service.dart';
+import 'package:app/shared/contracts/i_crash_report_service.dart';
 import 'package:app/shared/contracts/i_foreground_tracking_service.dart';
 import 'package:app/shared/contracts/i_location_client.dart';
 import 'package:app/shared/contracts/i_logger.dart';
@@ -35,13 +36,14 @@ Future<void> setupTestDi({
   IConnectivityService? connectivity,
   ISendingService? sending,
   IPredictionService? prediction,
+  ICrashReportService? crashReports,
   TrackAndTraceRepository? trackAndTraceRepository,
   Database? database,
 }) async {
   await injector.reset();
   injector.registerSingleton<IPreferenceService>(prefs ?? InMemoryPreferenceService());
   injector.registerSingleton<ILogger>(logger ?? const NoopLogger());
-  injector.registerSingleton<AppEnv>(env ?? AppEnv('test', 'http://test.local', false));
+  injector.registerSingleton<AppEnv>(env ?? AppEnv('test', 'http://test.local', false, ''));
   injector.registerSingleton<Dio>(dio ?? Dio());
   injector.registerSingleton<IsoClock>(clock ?? const IsoClock());
   injector.registerSingleton<IPermissionService>(permissions ?? InMemoryPermissionService());
@@ -50,6 +52,7 @@ Future<void> setupTestDi({
   injector.registerSingleton<IConnectivityService>(connectivity ?? InMemoryConnectivityService());
   injector.registerSingleton<ISendingService>(sending ?? InMemorySendingService());
   injector.registerSingleton<IPredictionService>(prediction ?? InMemoryPredictionService());
+  injector.registerSingleton<ICrashReportService>(crashReports ?? _InMemoryCrashReports());
   if (trackAndTraceRepository != null) {
     injector.registerSingleton<TrackAndTraceRepository>(trackAndTraceRepository);
   }
@@ -62,4 +65,11 @@ Future<void> setupTestDi({
 
 Future<void> tearDownTestDi() async {
   await injector.reset();
+}
+
+class _InMemoryCrashReports implements ICrashReportService {
+  bool result = true;
+
+  @override
+  Future<bool> uploadLogs() async => result;
 }
