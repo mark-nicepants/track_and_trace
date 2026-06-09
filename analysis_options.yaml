@@ -1,0 +1,45 @@
+include: package:flutter_lints/flutter.yaml
+
+formatter:
+  page_width: 120
+
+analyzer:
+  enable-experiment:
+    - primary-constructors
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  errors:
+    invalid_annotation_target: ignore
+    # Primary constructors don't yet support `const`, so this lint fires on
+    # every primary-constructor Equatable subclass. Silenced while the
+    # experiment matures.
+    prefer_const_constructors_in_immutables: ignore
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "build/**"
+    - ".dart_tool/**"
+    - "lib/ui/shared/l10n/generated/**"
+
+linter:
+  rules:
+    - always_declare_return_types
+    - avoid_dynamic_calls
+    - avoid_returning_null_for_void
+    - prefer_const_constructors
+    # Primary constructors don't yet support `const`, so this lint fires on
+    # every primary-constructor Equatable subclass. Disabled while the
+    # experiment matures.
+    # - prefer_const_constructors_in_immutables
+    - prefer_const_declarations
+    - prefer_const_literals_to_create_immutables
+    - prefer_final_fields
+    - prefer_final_in_for_each
+    - prefer_final_locals
+    - prefer_single_quotes
+    - require_trailing_commas
+    - unawaited_futures
+    - unnecessary_lambdas
+    - use_super_parameters

@@ -1,0 +1,28 @@
+# Lefthook git hooks. Skip with `git commit --no-verify` / `git push --no-verify`.
+# Install once with: `lefthook install`.
+#
+# All Flutter/Dart commands route through `fvm` so the pinned SDK in .fvmrc
+# is used.
+
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      glob: "*.dart"
+      run: fvm dart format --enable-experiment=primary-constructors --set-exit-if-changed --output=none {staged_files}
+    analyze:
+      run: fvm dart analyze --fatal-infos
+    layers:
+      run: fvm dart run --enable-experiment=primary-constructors tool/check_architecture_violations.dart
+
+pre-push:
+  parallel: true
+  commands:
+    format:
+      run: fvm dart format --enable-experiment=primary-constructors --set-exit-if-changed --output=none .
+    analyze:
+      run: fvm dart analyze --fatal-infos
+    layers:
+      run: fvm dart run --enable-experiment=primary-constructors tool/check_architecture_violations.dart
+    test:
+      run: fvm flutter test --enable-experiment=primary-constructors

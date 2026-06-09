@@ -1,0 +1,17 @@
+{
+  "@@locale": "nl",
+
+  "appTitle": "Track & Trace",
+  "helloUser": "Hallo, {name}",
+
+  "envSwitcherTitle": "Omgeving",
+  "envSwitcherActive": "Actief: {env}",
+  "envSwitcherHint": "Herstart om een nieuwe selectie toe te passen.",
+  "envSwitcherRestartTitle": "Herstart vereist",
+  "envSwitcherRestartBody": "Geselecteerde omgeving gewijzigd naar \"{env}\". Sluit en open de app om toe te passen.",
+  "commonOk": "OK",
+
+  "setupPermissionsTitle": "Setup en rechten",
+  "setupPermissionsHeading": "Track & Trace setup",
+  "setupPermissionsBody": "De setup- en permissiestroom start hier."
+}

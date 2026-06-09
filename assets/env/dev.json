@@ -1,0 +1,4 @@
+{
+  "apiBaseUrl": "https://api.dev.example.com",
+  "enableLogging": true
+}

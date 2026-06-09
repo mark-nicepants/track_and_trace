@@ -1,0 +1,33 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Track & Trace",
+  "@appTitle": {
+    "description": "App title shown in the system task switcher and AppBar."
+  },
+
+  "helloUser": "Hello, {name}",
+  "@helloUser": {
+    "description": "Greeting on the home page.",
+    "placeholders": {
+      "name": { "type": "String", "example": "Alice" }
+    }
+  },
+
+  "envSwitcherTitle": "Environment",
+  "envSwitcherActive": "Active: {env}",
+  "@envSwitcherActive": {
+    "placeholders": { "env": { "type": "String", "example": "prod" } }
+  },
+  "envSwitcherHint": "Restart to apply a new selection.",
+  "envSwitcherRestartTitle": "Restart required",
+  "envSwitcherRestartBody": "Selected environment changed to \"{env}\". Close and reopen the app to apply.",
+  "@envSwitcherRestartBody": {
+    "placeholders": { "env": { "type": "String" } }
+  },
+  "commonOk": "OK",
+
+  "setupPermissionsTitle": "Setup & Permissions",
+  "setupPermissionsHeading": "Track & Trace setup",
+  "setupPermissionsBody": "The setup and permission flow starts here."
+}
