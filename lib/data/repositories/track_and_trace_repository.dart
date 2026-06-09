@@ -6,9 +6,11 @@ import 'package:app/data/models/dump_size_dto.dart';
 import 'package:app/data/models/feedback_dto.dart';
 import 'package:app/data/models/get_nearest_depot_request_dto.dart';
 import 'package:app/data/models/get_status_request_dto.dart';
+import 'package:app/data/models/get_status_response_dto.dart';
 import 'package:app/data/models/machine_type_dto.dart';
 import 'package:app/data/models/nearest_depot_dto.dart';
 import 'package:app/data/models/start_run_request_dto.dart';
+import 'package:app/data/models/start_run_response_dto.dart';
 import 'package:app/data/models/stop_run_request_dto.dart';
 import 'package:app/data/models/sync_run_data_request_dto.dart';
 import 'package:app/shared/inject.dart';
@@ -22,8 +24,10 @@ import 'package:dio/dio.dart';
 class TrackAndTraceRepository {
   Dio get _dio => inject();
 
-  Future<void> sendStartRun(StartRunRequestDto request) =>
-      guardDio(() => _dio.post<void>('/create-run', data: request.toJson()));
+  Future<StartRunResponseDto> sendStartRun(StartRunRequestDto request) => guardDio(() async {
+    final response = await _dio.post<Map<String, Object?>>('/create-run', data: request.toJson());
+    return StartRunResponseDto.fromJson(response.data!);
+  });
 
   Future<void> sendStopRun(StopRunRequestDto request) =>
       guardDio(() => _dio.post<void>('/stop-run', data: request.toJson()));
@@ -34,8 +38,10 @@ class TrackAndTraceRepository {
   Future<void> sendFeedback(FeedbackDto feedback) =>
       guardDio(() => _dio.post<void>('/create-feedback', data: feedback.toJson()));
 
-  Future<void> getStatus(GetStatusRequestDto request) =>
-      guardDio(() => _dio.post<void>('/get-status', data: request.toJson()));
+  Future<GetStatusResponseDto> getStatus(GetStatusRequestDto request) => guardDio(() async {
+    final response = await _dio.post<Map<String, Object?>>('/get-status', data: request.toJson());
+    return GetStatusResponseDto.fromJson(response.data!);
+  });
 
   Future<void> sendDumpSize(DumpSizeDto request) =>
       guardDio(() => _dio.post<void>('/create-dump-size', data: request.toJson()));

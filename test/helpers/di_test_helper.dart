@@ -1,8 +1,10 @@
 import 'package:app/data/repositories/position_queue_repository.dart';
+import 'package:app/data/repositories/track_and_trace_repository.dart';
 import 'package:app/data/services/in_memory_connectivity_service.dart';
 import 'package:app/data/services/in_memory_foreground_tracking_service.dart';
 import 'package:app/data/services/in_memory_location_client.dart';
 import 'package:app/data/services/in_memory_permission_service.dart';
+import 'package:app/data/services/in_memory_prediction_service.dart';
 import 'package:app/data/services/in_memory_preference_service.dart';
 import 'package:app/data/services/in_memory_sending_service.dart';
 import 'package:app/data/services/noop_logger.dart';
@@ -13,6 +15,7 @@ import 'package:app/shared/contracts/i_foreground_tracking_service.dart';
 import 'package:app/shared/contracts/i_location_client.dart';
 import 'package:app/shared/contracts/i_logger.dart';
 import 'package:app/shared/contracts/i_permission_service.dart';
+import 'package:app/shared/contracts/i_prediction_service.dart';
 import 'package:app/shared/contracts/i_preference_service.dart';
 import 'package:app/shared/contracts/i_sending_service.dart';
 import 'package:app/shared/inject.dart';
@@ -31,6 +34,8 @@ Future<void> setupTestDi({
   IForegroundTrackingService? foreground,
   IConnectivityService? connectivity,
   ISendingService? sending,
+  IPredictionService? prediction,
+  TrackAndTraceRepository? trackAndTraceRepository,
   Database? database,
 }) async {
   await injector.reset();
@@ -44,6 +49,10 @@ Future<void> setupTestDi({
   injector.registerSingleton<IForegroundTrackingService>(foreground ?? InMemoryForegroundTrackingService());
   injector.registerSingleton<IConnectivityService>(connectivity ?? InMemoryConnectivityService());
   injector.registerSingleton<ISendingService>(sending ?? InMemorySendingService());
+  injector.registerSingleton<IPredictionService>(prediction ?? InMemoryPredictionService());
+  if (trackAndTraceRepository != null) {
+    injector.registerSingleton<TrackAndTraceRepository>(trackAndTraceRepository);
+  }
   if (database != null) {
     injector.registerSingletonAsync<Database>(() async => database);
     await injector.allReady();

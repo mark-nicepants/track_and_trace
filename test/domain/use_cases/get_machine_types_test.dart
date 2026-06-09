@@ -1,7 +1,6 @@
 import 'package:app/data/errors/data_exception.dart' as app_errors;
 import 'package:app/data/repositories/track_and_trace_repository.dart';
 import 'package:app/domain/use_cases/get_machine_types.dart';
-import 'package:app/shared/inject.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart' hide Matcher;
@@ -15,8 +14,7 @@ void main() {
   setUp(() async {
     dio = Dio(BaseOptions(baseUrl: 'http://test.local'));
     adapter = DioAdapter(dio: dio);
-    await setupTestDi(dio: dio);
-    injector.registerSingleton<TrackAndTraceRepository>(TrackAndTraceRepository());
+    await setupTestDi(dio: dio, trackAndTraceRepository: TrackAndTraceRepository());
   });
 
   tearDown(tearDownTestDi);

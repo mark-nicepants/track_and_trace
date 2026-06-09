@@ -3,10 +3,12 @@ import 'package:app/data/models/dump_size_dto.dart';
 import 'package:app/data/models/feedback_dto.dart';
 import 'package:app/data/models/get_nearest_depot_request_dto.dart';
 import 'package:app/data/models/get_status_request_dto.dart';
+import 'package:app/data/models/get_status_response_dto.dart';
 import 'package:app/data/models/machine_type_dto.dart';
 import 'package:app/data/models/nearest_depot_dto.dart';
 import 'package:app/data/models/run_dto.dart';
 import 'package:app/data/models/start_run_request_dto.dart';
+import 'package:app/data/models/start_run_response_dto.dart';
 import 'package:app/data/models/status_timestamp_dto.dart';
 import 'package:app/data/models/stop_run_request_dto.dart';
 import 'package:app/data/models/sync_run_data_request_dto.dart';
@@ -90,3 +92,8 @@ GetNearestDepotRequestDto getNearestDepotRequestDto({String runId = 'run-1', Str
 
 SyncRunDataRequestDto syncRunDataRequestDto({String runId = 'run-1', String time = _iso, String quantity = 'HALF'}) =>
     SyncRunDataRequestDto(runId, time, quantity);
+
+StartRunResponseDto startRunResponseDto({String runId = 'run-1'}) => StartRunResponseDto(runId);
+
+GetStatusResponseDto getStatusResponseDto({String activity = 'DRIVING', String time = _iso}) =>
+    GetStatusResponseDto(activity, time);

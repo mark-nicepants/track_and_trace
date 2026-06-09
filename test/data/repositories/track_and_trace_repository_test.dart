@@ -58,11 +58,14 @@ void main() {
   }
 
   group('/create-run', () {
-    Future<void> invoke() => repo.sendStartRun(startRunRequestDto());
+    Future<void> invoke() async {
+      await repo.sendStartRun(startRunRequestDto());
+    }
 
-    test('success', () async {
-      replyOk('/create-run');
-      await invoke();
+    test('success returns parsed runId', () async {
+      adapter.onPost('/create-run', (server) => server.reply(200, {'runId': 'run-abc'}), data: Matchers.any);
+      final result = await repo.sendStartRun(startRunRequestDto());
+      expect(result.runId, 'run-abc');
     });
 
     runErrorPair('/create-run', '/create-run', invoke);
@@ -102,11 +105,19 @@ void main() {
   });
 
   group('/get-status', () {
-    Future<void> invoke() => repo.getStatus(getStatusRequestDto());
+    Future<void> invoke() async {
+      await repo.getStatus(getStatusRequestDto());
+    }
 
-    test('success', () async {
-      replyOk('/get-status');
-      await invoke();
+    test('success returns parsed activity + time', () async {
+      adapter.onPost(
+        '/get-status',
+        (server) => server.reply(200, {'activity': 'DRIVING', 'time': '2026-06-09T12:00:00.000'}),
+        data: Matchers.any,
+      );
+      final result = await repo.getStatus(getStatusRequestDto());
+      expect(result.activity, 'DRIVING');
+      expect(result.time, '2026-06-09T12:00:00.000');
     });
 
     runErrorPair('/get-status', '/get-status', invoke);

@@ -28,5 +28,27 @@
   "setupOfflineBanner": "Geen verbinding — opgeslagen lijst gebruikt.",
 
   "noNetworkTitle": "Geen netwerk",
-  "noNetworkBody": "Momenteel is er geen internetverbinding beschikbaar. Deze app vereist een internetverbinding om correct te functioneren. De tracking vindt plaats op basis van GPS en gaat door op de achtergrond. Zonder internetverbinding is het niet mogelijk om feedback te geven. Zodra de internetverbinding hersteld is, zal de app weer volledig operationeel zijn en zullen de trackinggegevens naar Gisib worden verstuurd. U kunt ook op 'Stop' drukken. De tracking stopt dan en u wordt teruggestuurd naar het beginscherm."
+  "noNetworkBody": "Momenteel is er geen internetverbinding beschikbaar. Deze app vereist een internetverbinding om correct te functioneren. De tracking vindt plaats op basis van GPS en gaat door op de achtergrond. Zonder internetverbinding is het niet mogelijk om feedback te geven. Zodra de internetverbinding hersteld is, zal de app weer volledig operationeel zijn en zullen de trackinggegevens naar Gisib worden verstuurd. U kunt ook op 'Stop' drukken. De tracking stopt dan en u wordt teruggestuurd naar het beginscherm.",
+
+  "trackingScreenTitle": "Tracking Scherm",
+  "trackingPrediction": "Voorspelling",
+  "trackingFeedback": "Feedback",
+  "trackingNoActivity": "Geen Activiteit",
+  "trackingFeedbackNoActivity": "-",
+  "trackingActivityDriving": "Rijden",
+  "trackingActivityLoading": "Opladen",
+  "trackingActivityDumping": "Storten",
+  "trackingActivityStandingStill": "Stilstaan",
+  "trackingNearestDepotIs": "Het dichstbijzijnde depot is:",
+  "trackingCapacity": "Inhoud van kipper/kiepwagen in kuubs/m³",
+  "trackingMowerType": "Type kipper/kiepwagen",
+  "trackingStart": "Start",
+  "trackingStop": "Stop",
+  "trackingStopRunTitle": "Stop de huidige rit",
+  "trackingStopRunBody": "Weet u zeker dat u de huidige rit stop wilt zetten?",
+  "trackingYes": "Ja",
+  "trackingNo": "Nee",
+  "trackingStoppingRun": "Aan het stoppen",
+  "trackingStartingRun": "Aan het opstarten",
+  "trackingClickStartToBegin": "Klik op Start om te beginnen"
 }

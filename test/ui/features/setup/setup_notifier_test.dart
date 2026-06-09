@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:app/data/repositories/track_and_trace_repository.dart';
 import 'package:app/data/services/in_memory_preference_service.dart';
 import 'package:app/domain/entities/machine_type.dart';
-import 'package:app/shared/inject.dart';
 import 'package:app/ui/features/setup/setup_keys.dart';
 import 'package:app/ui/features/setup/setup_notifier.dart';
 import 'package:dio/dio.dart';
@@ -22,8 +21,7 @@ void main() {
     dio = Dio(BaseOptions(baseUrl: 'http://test.local'));
     adapter = DioAdapter(dio: dio);
     prefs = InMemoryPreferenceService();
-    await setupTestDi(dio: dio, prefs: prefs);
-    injector.registerSingleton<TrackAndTraceRepository>(TrackAndTraceRepository());
+    await setupTestDi(dio: dio, prefs: prefs, trackAndTraceRepository: TrackAndTraceRepository());
   });
 
   tearDown(tearDownTestDi);

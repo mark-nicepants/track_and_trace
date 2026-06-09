@@ -5,6 +5,7 @@ import 'package:app/data/repositories/track_and_trace_repository.dart';
 import 'package:app/data/services/connectivity_service.dart';
 import 'package:app/data/services/foreground_tracking_service.dart';
 import 'package:app/data/services/permission_service.dart';
+import 'package:app/data/services/prediction_service.dart';
 import 'package:app/data/services/sending_service.dart';
 import 'package:app/data/services/tracelet_location_client.dart';
 import 'package:app/shared/config/app_env.dart';
@@ -12,6 +13,7 @@ import 'package:app/shared/contracts/i_connectivity_service.dart';
 import 'package:app/shared/contracts/i_foreground_tracking_service.dart';
 import 'package:app/shared/contracts/i_location_client.dart';
 import 'package:app/shared/contracts/i_permission_service.dart';
+import 'package:app/shared/contracts/i_prediction_service.dart';
 import 'package:app/shared/contracts/i_sending_service.dart';
 import 'package:app/shared/inject.dart';
 import 'package:dio/dio.dart';
@@ -47,4 +49,5 @@ void registerDataModule() {
 
   injector.registerSingleton<PositionQueueRepository>(PositionQueueRepository());
   injector.registerSingleton<ISendingService>(SendingService());
+  injector.registerSingleton<IPredictionService>(PredictionService());
 }
