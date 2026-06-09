@@ -71,5 +71,17 @@
   "crashZippingFiles": "Bestanden comprimeren",
   "crashSendingReport": "Crash rapport versturen",
   "crashSentSuccessfully": "Crash rapport met success verstuurd!",
-  "crashFailed": "Crash rapport versturen mislukt."
+  "crashFailed": "Crash rapport versturen mislukt.",
+
+  "errorUnauthorized": "Geen toegang. Controleer de API-sleutel of meld u opnieuw aan.",
+  "errorNotFound": "Niet gevonden.",
+  "errorConflict": "Deze actie botst met de huidige status.",
+  "errorValidation": "Ongeldige {field}: {message}",
+  "errorServer": "Server is tijdelijk niet bereikbaar (HTTP {statusCode}). Probeer het later opnieuw.",
+  "errorNetwork": "Geen internetverbinding. Controleer uw netwerk en probeer het opnieuw.",
+  "errorTimeout": "De verbinding duurde te lang. Probeer het opnieuw.",
+  "errorHttp": "Serverfout (HTTP {statusCode}). Probeer het later opnieuw.",
+  "errorParse": "Onverwacht antwoord van de server.",
+  "errorUnknownData": "Er is een onbekende fout opgetreden. Probeer het opnieuw.",
+  "errorGeneric": "Er is iets misgegaan. Probeer het opnieuw."
 }

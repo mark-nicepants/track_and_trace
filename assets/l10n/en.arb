@@ -194,5 +194,56 @@
   "crashFailed": "Crash rapport versturen mislukt.",
   "@crashFailed": {
     "description": "Failure message after upload (Dutch translation of Android's `Sent Crash Report failed.`)."
+  },
+
+  "errorUnauthorized": "No access. Check the API key or sign in again.",
+  "@errorUnauthorized": {
+    "description": "Surfaced when an API call returns 401/403 (UnauthorizedException)."
+  },
+  "errorNotFound": "Not found.",
+  "@errorNotFound": {
+    "description": "Surfaced when an API call returns 404 (NotFoundException)."
+  },
+  "errorConflict": "This action conflicts with the current state.",
+  "@errorConflict": {
+    "description": "Surfaced when an API call returns 409 (ConflictException)."
+  },
+  "errorValidation": "Invalid {field}: {message}",
+  "@errorValidation": {
+    "description": "Surfaced for ValidationException — typically a 422 with field-level details.",
+    "placeholders": {
+      "field": { "type": "String", "example": "capacity" },
+      "message": { "type": "String", "example": "must be positive" }
+    }
+  },
+  "errorServer": "Server temporarily unavailable (HTTP {statusCode}). Please try again later.",
+  "@errorServer": {
+    "description": "Surfaced for 5xx responses (ServerException).",
+    "placeholders": { "statusCode": { "type": "int", "example": "503" } }
+  },
+  "errorNetwork": "No internet connection. Check your network and try again.",
+  "@errorNetwork": {
+    "description": "Surfaced when the transport reports a connection error (NetworkException)."
+  },
+  "errorTimeout": "The connection took too long. Please try again.",
+  "@errorTimeout": {
+    "description": "Surfaced when a request times out (TimeoutException)."
+  },
+  "errorHttp": "Server error (HTTP {statusCode}). Please try again later.",
+  "@errorHttp": {
+    "description": "Fallback for an HttpException whose status code didn't map to a more specific DomainException.",
+    "placeholders": { "statusCode": { "type": "int", "example": "418" } }
+  },
+  "errorParse": "Unexpected response from the server.",
+  "@errorParse": {
+    "description": "Surfaced when the response body fails to parse (ParseException)."
+  },
+  "errorUnknownData": "An unknown error occurred. Please try again.",
+  "@errorUnknownData": {
+    "description": "Catch-all for UnknownDataException."
+  },
+  "errorGeneric": "Something went wrong. Please try again.",
+  "@errorGeneric": {
+    "description": "Final fallback in errorMessage() when no specific exception type matched."
   }
 }

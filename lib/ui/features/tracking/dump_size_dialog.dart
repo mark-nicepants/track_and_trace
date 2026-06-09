@@ -30,22 +30,21 @@ class DumpSizeDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L10n.translate;
     final selected = useState<DumpSize>(DumpSize.full);
 
     final options = <(DumpSize, String, Key)>[
-      (DumpSize.quarter, l.dumpSizeQuarter, const Key('dumpSizeOptionQuarter')),
-      (DumpSize.half, l.dumpSizeHalf, const Key('dumpSizeOptionHalf')),
-      (DumpSize.threeQuarter, l.dumpSizeThreeQuarter, const Key('dumpSizeOptionThreeQuarter')),
-      (DumpSize.full, l.dumpSizeFull, const Key('dumpSizeOptionFull')),
-      (DumpSize.unspecified, l.dumpSizeUnspecified, const Key('dumpSizeOptionUnspecified')),
+      (DumpSize.quarter, L10n.translate.dumpSizeQuarter, const Key('dumpSizeOptionQuarter')),
+      (DumpSize.half, L10n.translate.dumpSizeHalf, const Key('dumpSizeOptionHalf')),
+      (DumpSize.threeQuarter, L10n.translate.dumpSizeThreeQuarter, const Key('dumpSizeOptionThreeQuarter')),
+      (DumpSize.full, L10n.translate.dumpSizeFull, const Key('dumpSizeOptionFull')),
+      (DumpSize.unspecified, L10n.translate.dumpSizeUnspecified, const Key('dumpSizeOptionUnspecified')),
     ];
 
     return PopScope(
       canPop: false,
       child: AlertDialog(
         key: dialogKey,
-        title: Text(l.dumpSizeTitle, textAlign: TextAlign.center),
+        title: Text(L10n.translate.dumpSizeTitle, textAlign: TextAlign.center),
         content: SingleChildScrollView(
           child: RadioGroup<DumpSize>(
             groupValue: selected.value,
@@ -70,8 +69,12 @@ class DumpSizeDialog extends HookWidget {
           ),
         ),
         actions: [
-          TextButton(key: dismissKey, onPressed: onDismiss, child: Text(l.dumpSizeDismiss)),
-          TextButton(key: confirmKey, onPressed: () => onConfirm(selected.value), child: Text(l.dumpSizeConfirm)),
+          TextButton(key: dismissKey, onPressed: onDismiss, child: Text(L10n.translate.dumpSizeDismiss)),
+          TextButton(
+            key: confirmKey,
+            onPressed: () => onConfirm(selected.value),
+            child: Text(L10n.translate.dumpSizeConfirm),
+          ),
         ],
       ),
     );

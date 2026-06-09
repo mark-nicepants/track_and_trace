@@ -14,7 +14,7 @@ class GetNearestDepot(final String runId) extends UseCase<NearestDepot> {
   IsoClock get _clock => inject();
 
   @override
-  Future<NearestDepot> call() async {
+  Future<NearestDepot> execute() async {
     final dto = await _repo.getNearestDepot(GetNearestDepotRequestDto(runId, _clock.nowIso()));
     return dto.toEntity();
   }

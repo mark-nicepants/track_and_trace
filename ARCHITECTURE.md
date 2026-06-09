@@ -97,13 +97,14 @@ lib/
       i_sending_service.dart
       i_prediction_service.dart
       i_connectivity_service.dart
+    errors/
+      data_exception.dart             # sealed DataException hierarchy (cross-layer)
   data/
     di/
       data_module.dart                # registers dio + repos + services
-    errors/
-      data_exception.dart             # sealed DataException hierarchy
     http/
       dio_provider.dart               # constructs the single Dio instance
+      auth_interceptor.dart           # attaches X-API-Key from AppEnv
       guard_dio.dart                  # try/catch → DataException helper
       http_logging_interceptor.dart
     models/                           # DTOs
@@ -540,32 +541,53 @@ Domain and UI have no registration functions because they own no GetIt entries.
 
 ### Hierarchy
 
-Sealed exception classes per layer:
+Sealed exception classes — two hierarchies, two locations:
 
 ```dart
-// data/errors/data_exception.dart
+// shared/errors/data_exception.dart  (cross-layer: both data and ui import it)
 sealed class DataException implements Exception {}
 class NetworkException extends DataException {}
 class TimeoutException extends DataException {}
-class HttpException(final int status, final Object? body) extends DataException {}
-class ParseException(final Object cause) extends DataException {}
-class UnknownDataException(final Object cause) extends DataException {}
+class HttpException(final int statusCode, final Object? body) extends DataException;
+class ParseException(final Object cause) extends DataException;
+class UnknownDataException(final Object cause) extends DataException;
 
 // domain/errors/domain_exception.dart
 sealed class DomainException implements Exception {}
 class NotFoundException extends DomainException {}
-class ValidationException(final String field, final String message) extends DomainException {}
+class ValidationException(final String field, final String message) extends DomainException;
 class UnauthorizedException extends DomainException {}
 class ConflictException extends DomainException {}
+class ServerException(final int statusCode) extends DomainException;
 ```
+
+`DataException` lives under `lib/shared/errors/` because both `data/` (the
+producer) and `ui/` (`error_messages.dart` matches on `NetworkException`,
+`TimeoutException`, …) consume it. Putting it in `shared/` keeps the
+`ui → data` layer rule intact.
 
 ### Flow
 
-- The dio `DataExceptionInterceptor` translates all `DioException`s into the
-  sealed `DataException` types. Repos never write try/catch around HTTP.
-- Use-cases let `DataException`s propagate by default. They catch + rethrow as
-  a `DomainException` only when the domain meaning differs (e.g. `HttpException(401)`
-  → `InvalidCredentialsException` inside the `Login` use-case).
+- `guardDio` (in `lib/data/http/`) wraps every repository call. It translates
+  all `DioException`s into the sealed `DataException` types so repos never
+  write their own try/catch around HTTP.
+- The `UseCase` base class is a template: subclasses override `execute()`;
+  the public `call()` wraps it and translates well-known HTTP status codes
+  into `DomainException` subtypes via `mapHttpStatusToDomain()`:
+  - `401` / `403` → `UnauthorizedException`
+  - `404` → `NotFoundException`
+  - `409` → `ConflictException`
+  - `5xx` → `ServerException(statusCode)`
+  - everything else propagates as the original `HttpException`.
+  Per-use-case overrides remain free to catch + rethrow more specific
+  `DomainException`s (e.g. parsing a 422 body into `ValidationException`).
+- Authentication. The reference Android app uses a static `X-API-Key`
+  header sourced from `BuildConfig.GCP_API_KEY` (loaded at build time from
+  the gitignored `local.properties`). The Flutter port mirrors this:
+  `AuthInterceptor` (registered in `buildDio`) reads `AppEnv.apiKey` and
+  attaches it as `X-API-Key` on every request. The real key lives in
+  `assets/env/local.json` (gitignored); committed env files carry an empty
+  placeholder.
 - Riverpod's `AsyncValue` captures these via `AsyncValue.guard`. UI surfaces
   them with `.when(error: ...)` plus pattern matching:
 
@@ -623,16 +645,15 @@ class AppEnv(
   final String name,
   final String apiBaseUrl,
   final bool enableLogging,
-) extends Equatable {
-  factory AppEnv.fromJson(String name, Map<String, Object?> json) => AppEnv(
-    name,
-    json['apiBaseUrl'] as String,
-    json['enableLogging'] as bool? ?? false,
-  );
-  @override
-  List<Object?> get props => [name, apiBaseUrl, enableLogging];
-}
+  final String newRelicToken,
+  final String apiKey,
+) extends Equatable { … }
 ```
+
+`apiKey` is the backend's static `X-API-Key`. Committed env files
+(`dev.json`, `staging.json`, `prod.json`) carry an empty string; the real
+key lives in `assets/env/local.json` (gitignored), mirroring the reference
+Android app's `local.properties` pattern.
 
 ### Feature flags
 
@@ -671,6 +692,12 @@ remote feature-flag service) is an explicit extension point — add a
   ```dart
   Text(L10n.translate.helloUser(user.name))
   ```
+
+- **Never alias `L10n.translate`.** Do not write `final l = L10n.translate;`
+  (or `final t = ...`, etc.) and then read `l.someKey`. Always reference
+  `L10n.translate.someKey` directly at the call site, even when several keys
+  are read in the same method. Aliases hide the static façade, make greps for
+  `L10n.` miss usages, and add a local that doesn't carry its weight.
 
 - `L10n.init(context)` is called once from `App.onGenerateTitle` — which always
   runs with a localised context, and re-runs on locale change. After that the

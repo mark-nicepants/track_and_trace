@@ -12,7 +12,7 @@ class StartRun(final String machineTypeId, final num capacity) extends UseCase<S
   IsoClock get _clock => inject();
 
   @override
-  Future<String> call() async {
+  Future<String> execute() async {
     final response = await _repo.sendStartRun(StartRunRequestDto(_clock.nowIso(), machineTypeId, capacity));
     return response.runId;
   }

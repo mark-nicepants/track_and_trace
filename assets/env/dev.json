@@ -1,5 +1,6 @@
 {
   "apiBaseUrl": "https://track-and-trace-dev-283621971711.europe-west4.run.app",
   "enableLogging": true,
-  "newRelicToken": ""
+  "newRelicToken": "",
+  "apiKey": ""
 }

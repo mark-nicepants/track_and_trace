@@ -38,7 +38,6 @@ class TrackingPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tracking = ref.watch(trackingProvider);
     final notifier = ref.read(trackingProvider.notifier);
-    final l = L10n.translate;
 
     // Wakelock acquire on mount / release on dispose. The notifier's own
     // start() is fired once on first build via the same effect.
@@ -107,7 +106,7 @@ class TrackingPage extends HookConsumerWidget {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        appBar: AppBar(title: Text(l.trackingScreenTitle)),
+        appBar: AppBar(title: Text(L10n.translate.trackingScreenTitle)),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -130,20 +129,19 @@ class TrackingPage extends HookConsumerWidget {
   }
 
   Widget _statesView(BuildContext context, TrackingState tracking) {
-    final l = L10n.translate;
     return Row(
       children: [
         Expanded(
           child: _stateBox(
-            label: l.trackingPrediction,
-            value: _activityLabel(context, tracking.predictedState, fallback: l.trackingNoActivity),
+            label: L10n.translate.trackingPrediction,
+            value: _activityLabel(context, tracking.predictedState, fallback: L10n.translate.trackingNoActivity),
           ),
         ),
         const VerticalDivider(width: 1, color: Colors.black54),
         Expanded(
           child: _stateBox(
-            label: l.trackingFeedback,
-            value: _activityLabel(context, tracking.feedbackState, fallback: l.trackingFeedbackNoActivity),
+            label: L10n.translate.trackingFeedback,
+            value: _activityLabel(context, tracking.feedbackState, fallback: L10n.translate.trackingFeedbackNoActivity),
           ),
         ),
       ],
@@ -163,21 +161,19 @@ class TrackingPage extends HookConsumerWidget {
 
   Widget _depotLabel(BuildContext context, TrackingState tracking) {
     if (tracking.nearestDepot == null) return const SizedBox.shrink();
-    final l = L10n.translate;
     return Text(
-      '${l.trackingNearestDepotIs} ${tracking.nearestDepot!.name}',
+      '${L10n.translate.trackingNearestDepotIs} ${tracking.nearestDepot!.name}',
       textAlign: TextAlign.center,
       style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
     );
   }
 
   Widget _feedbackGrid(BuildContext context, TrackingState tracking, TrackingNotifier notifier) {
-    final l = L10n.translate;
     final activities = <(ActivityState, String)>[
-      (ActivityState.driving, l.trackingActivityDriving),
-      (ActivityState.loading, l.trackingActivityLoading),
-      (ActivityState.dumping, l.trackingActivityDumping),
-      (ActivityState.standingStill, l.trackingActivityStandingStill),
+      (ActivityState.driving, L10n.translate.trackingActivityDriving),
+      (ActivityState.loading, L10n.translate.trackingActivityLoading),
+      (ActivityState.dumping, L10n.translate.trackingActivityDumping),
+      (ActivityState.standingStill, L10n.translate.trackingActivityStandingStill),
     ];
     final selectedIndex = tracking.selectedFeedbackIndex;
     return GridView.builder(
@@ -207,29 +203,30 @@ class TrackingPage extends HookConsumerWidget {
   }
 
   Widget _stopButton(BuildContext context, TrackingState tracking, TrackingNotifier notifier) {
-    final l = L10n.translate;
     return FilledButton(
       key: const Key('stopButton'),
       onPressed: tracking.stopping ? null : () => unawaited(_confirmStop(context, notifier)),
-      child: Text(tracking.stopping ? l.trackingStoppingRun : l.trackingStop, style: const TextStyle(fontSize: 22)),
+      child: Text(
+        tracking.stopping ? L10n.translate.trackingStoppingRun : L10n.translate.trackingStop,
+        style: const TextStyle(fontSize: 22),
+      ),
     );
   }
 
   Future<void> _confirmStop(BuildContext context, TrackingNotifier notifier) async {
-    final l = L10n.translate;
     final confirmed = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) => AlertDialog(
         key: const Key('stopRunDialog'),
-        title: Text(l.trackingStopRunTitle),
-        content: Text(l.trackingStopRunBody),
+        title: Text(L10n.translate.trackingStopRunTitle),
+        content: Text(L10n.translate.trackingStopRunBody),
         actions: [
-          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: Text(l.trackingNo)),
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: Text(L10n.translate.trackingNo)),
           TextButton(
             key: const Key('stopRunConfirm'),
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(l.trackingYes),
+            child: Text(L10n.translate.trackingYes),
           ),
         ],
       ),
@@ -241,12 +238,11 @@ class TrackingPage extends HookConsumerWidget {
   }
 
   String _activityLabel(BuildContext context, ActivityState? state, {required String fallback}) {
-    final l = L10n.translate;
     return switch (state) {
-      ActivityState.driving => l.trackingActivityDriving,
-      ActivityState.loading => l.trackingActivityLoading,
-      ActivityState.dumping => l.trackingActivityDumping,
-      ActivityState.standingStill => l.trackingActivityStandingStill,
+      ActivityState.driving => L10n.translate.trackingActivityDriving,
+      ActivityState.loading => L10n.translate.trackingActivityLoading,
+      ActivityState.dumping => L10n.translate.trackingActivityDumping,
+      ActivityState.standingStill => L10n.translate.trackingActivityStandingStill,
       null => fallback,
     };
   }

@@ -3,6 +3,7 @@
 //   - no `inject<>` and no `package:get_it` import in widgets
 //   - raw `GetIt.I` only in the inject helper itself; everything else uses
 //     `injector` (re-exported raw instance) or `inject<T>()` (typed lookup)
+//   - no aliasing of `L10n.translate` (must be referenced directly)
 //
 // Run manually: `fvm dart run --enable-experiment=primary-constructors \
 //                  tool/check_architecture_violations.dart`
@@ -39,6 +40,7 @@ const Set<String> _getItAllowList = {'lib/shared/inject.dart'};
 
 final RegExp _widgetExtends = RegExp(r'\bextends\s+(?:Stateless|Stateful|Consumer|HookConsumer|Hook)Widget\b');
 final RegExp _rawGetIt = RegExp(r'\bGetIt\.I\b');
+final RegExp _l10nAlias = RegExp(r'=\s*L10n\.translate\s*;');
 
 bool _isImportLine(String line) {
   final trimmed = line.trimLeft();
@@ -106,6 +108,21 @@ Future<void> main() async {
             ),
           );
         }
+      }
+    }
+
+    for (var i = 0; i < lines.length; i++) {
+      final line = lines[i];
+      if (_isCommentLine(line)) continue;
+      if (_l10nAlias.hasMatch(line)) {
+        violations.add(
+          _format(
+            rel,
+            i + 1,
+            'do not alias L10n.translate; reference L10n.translate.x directly at the call site',
+            line,
+          ),
+        );
       }
     }
   }

@@ -4,6 +4,7 @@ import 'package:app/domain/entities/machine_type.dart';
 import 'package:app/domain/use_cases/get_machine_types.dart';
 import 'package:app/shared/contracts/i_preference_service.dart';
 import 'package:app/shared/inject.dart';
+import 'package:app/shared/log.dart';
 import 'package:app/ui/features/setup/setup_keys.dart';
 import 'package:app/ui/features/setup/setup_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,7 +23,14 @@ class SetupNotifier extends AsyncNotifier<SetupState> {
       final fresh = await _getMachineTypes().call();
       await _writeCache(fresh);
       return SetupState(fresh, false, _matchSavedType(fresh, saved.$1), saved.$2, false);
-    } catch (_) {
+    } catch (error, stackTrace) {
+      log.error('Failed to load machine types, falling back to cache', error, stackTrace);
+
+      if (cached.isEmpty) {
+        // No cached data either, show an error.
+        rethrow;
+      }
+
       return SetupState(cached, cached.isNotEmpty, _matchSavedType(cached, saved.$1), saved.$2, false);
     }
   }
@@ -62,7 +70,8 @@ class SetupNotifier extends AsyncNotifier<SetupState> {
     try {
       final decoded = jsonDecode(raw) as List<Object?>;
       return decoded.map((e) => _typeFromJson(e! as Map<String, Object?>)).toList(growable: false);
-    } catch (_) {
+    } catch (error, stackTrace) {
+      log.error('Failed to read machine types cache', error, stackTrace);
       return const [];
     }
   }
@@ -79,7 +88,8 @@ class SetupNotifier extends AsyncNotifier<SetupState> {
     if (typeRaw != null && typeRaw.isNotEmpty) {
       try {
         type = _typeFromJson(jsonDecode(typeRaw) as Map<String, Object?>);
-      } catch (_) {
+      } catch (error, stackTrace) {
+        log.error('Failed to read saved machine type', error, stackTrace);
         type = null;
       }
     }

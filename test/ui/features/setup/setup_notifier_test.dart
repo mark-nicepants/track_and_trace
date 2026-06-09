@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:app/data/repositories/track_and_trace_repository.dart';
 import 'package:app/domain/entities/machine_type.dart';
+import 'package:app/shared/errors/data_exception.dart' as app_errors;
 import 'package:app/ui/features/setup/setup_keys.dart';
 import 'package:app/ui/features/setup/setup_notifier.dart';
+import 'package:app/ui/features/setup/setup_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -82,15 +84,25 @@ void main() {
     expect(state.fromCache, isTrue);
   });
 
-  test('build() with no cache + network failure returns empty list (not fromCache)', () async {
+  test('build() with no cache + network failure rethrows so the UI can show an error', () async {
     networkError();
 
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
-    final state = await container.read(setupProvider.future);
-    expect(state.machineTypes, isEmpty);
-    expect(state.fromCache, isFalse);
+    // Trigger the build and wait for the state to settle into an
+    // AsyncError. `provider.future` does not surface a build() throw in
+    // this Riverpod version — it stays parked on the loading completer
+    // until the container is disposed — so we poll the AsyncValue
+    // instead.
+    container.read(setupProvider);
+    AsyncValue<SetupState> state = container.read(setupProvider);
+    for (var i = 0; i < 50 && state.isLoading && !state.hasError; i++) {
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+      state = container.read(setupProvider);
+    }
+    expect(state.hasError, isTrue, reason: 'state did not settle into an error: $state');
+    expect(state.error, isA<app_errors.NetworkException>());
   });
 
   test('build() pre-populates saved type + capacity', () async {

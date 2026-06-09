@@ -10,7 +10,7 @@ class GetMachineTypes extends UseCase<List<MachineType>> {
   TrackAndTraceRepository get _repo => inject();
 
   @override
-  Future<List<MachineType>> call() async {
+  Future<List<MachineType>> execute() async {
     final dtos = await _repo.getMachineTypes();
     return dtos.map((dto) => dto.toEntity()).toList(growable: false);
   }

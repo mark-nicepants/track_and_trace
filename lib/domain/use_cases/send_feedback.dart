@@ -14,5 +14,5 @@ class SendFeedback(final String runId, final ActivityState activity) extends Use
   IsoClock get _clock => inject();
 
   @override
-  Future<void> call() => _repo.sendFeedback(FeedbackDto(runId, _clock.nowIso(), activity.wireName));
+  Future<void> execute() => _repo.sendFeedback(FeedbackDto(runId, _clock.nowIso(), activity.wireName));
 }

@@ -33,12 +33,11 @@ class CrashPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(crashProvider);
     final notifier = ref.read(crashProvider.notifier);
-    final l = L10n.translate;
 
     return PopScope(
       canPop: false,
       child: Scaffold(
-        appBar: AppBar(title: Text(l.crashDetectedTitle)),
+        appBar: AppBar(title: Text(L10n.translate.crashDetectedTitle)),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -47,9 +46,9 @@ class CrashPage extends ConsumerWidget {
                 CrashReportStatus.choice => _ChoiceView(
                   onYes: () => unawaited(
                     notifier.sendReport(
-                      gettingLogFilesLabel: l.crashGettingLogFiles,
-                      zippingLabel: l.crashZippingFiles,
-                      sendingLabel: l.crashSendingReport,
+                      gettingLogFilesLabel: L10n.translate.crashGettingLogFiles,
+                      zippingLabel: L10n.translate.crashZippingFiles,
+                      sendingLabel: L10n.translate.crashSendingReport,
                     ),
                   ),
                   onNo: () async {
@@ -77,17 +76,20 @@ class _ChoiceView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L10n.translate;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(l.crashBody, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
+        Text(L10n.translate.crashBody, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
         const SizedBox(height: 24),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            TextButton(key: const Key('crashDecline'), onPressed: () => unawaited(onNo()), child: Text(l.crashNo)),
-            FilledButton(key: const Key('crashAccept'), onPressed: onYes, child: Text(l.crashYes)),
+            TextButton(
+              key: const Key('crashDecline'),
+              onPressed: () => unawaited(onNo()),
+              child: Text(L10n.translate.crashNo),
+            ),
+            FilledButton(key: const Key('crashAccept'), onPressed: onYes, child: Text(L10n.translate.crashYes)),
           ],
         ),
       ],
@@ -102,11 +104,10 @@ class _BusyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L10n.translate;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('${l.crashSendingReport}…', style: Theme.of(context).textTheme.titleMedium),
+        Text('${L10n.translate.crashSendingReport}…', style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 12),
         if (label != null) Text(label!, style: Theme.of(context).textTheme.bodySmall),
         const SizedBox(height: 24),
@@ -123,13 +124,16 @@ class _SuccessView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L10n.translate;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(l.crashSentSuccessfully, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
+        Text(
+          L10n.translate.crashSentSuccessfully,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
         const SizedBox(height: 24),
-        FilledButton(key: const Key('crashClose'), onPressed: onClose, child: Text(l.crashClose)),
+        FilledButton(key: const Key('crashClose'), onPressed: onClose, child: Text(L10n.translate.crashClose)),
       ],
     );
   }
@@ -143,17 +147,16 @@ class _FailedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L10n.translate;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(l.crashFailed, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
+        Text(L10n.translate.crashFailed, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
         const SizedBox(height: 24),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            TextButton(key: const Key('crashClose'), onPressed: onClose, child: Text(l.crashClose)),
-            FilledButton(key: const Key('crashRetry'), onPressed: onRetry, child: Text(l.crashTryAgain)),
+            TextButton(key: const Key('crashClose'), onPressed: onClose, child: Text(L10n.translate.crashClose)),
+            FilledButton(key: const Key('crashRetry'), onPressed: onRetry, child: Text(L10n.translate.crashTryAgain)),
           ],
         ),
       ],

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:app/data/errors/data_exception.dart' as app_errors;
+import 'package:app/shared/errors/data_exception.dart' as app_errors;
 import 'package:app/data/repositories/track_and_trace_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';

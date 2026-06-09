@@ -11,5 +11,5 @@ class StopRun(final String runId) extends UseCase<void> {
   IsoClock get _clock => inject();
 
   @override
-  Future<void> call() => _repo.sendStopRun(StopRunRequestDto(runId, _clock.nowIso()));
+  Future<void> execute() => _repo.sendStopRun(StopRunRequestDto(runId, _clock.nowIso()));
 }

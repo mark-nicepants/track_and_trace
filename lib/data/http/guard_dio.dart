@@ -1,4 +1,4 @@
-import 'package:app/data/errors/data_exception.dart';
+import 'package:app/shared/errors/data_exception.dart';
 import 'package:dio/dio.dart' as dio;
 
 /// Wraps a dio call and translates any low-level failure into a sealed

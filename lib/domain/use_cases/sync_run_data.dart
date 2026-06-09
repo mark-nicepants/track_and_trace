@@ -16,5 +16,5 @@ class SyncRunData(final String runId, final DumpSize dumpSize) extends UseCase<v
   IsoClock get _clock => inject();
 
   @override
-  Future<void> call() => _repo.sendSyncRunData(SyncRunDataRequestDto(runId, _clock.nowIso(), dumpSize.wireName));
+  Future<void> execute() => _repo.sendSyncRunData(SyncRunDataRequestDto(runId, _clock.nowIso(), dumpSize.wireName));
 }

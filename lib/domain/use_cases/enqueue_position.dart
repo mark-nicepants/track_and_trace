@@ -11,5 +11,5 @@ class EnqueuePosition(final LocationFix fix, final String? runId) extends UseCas
   PositionQueueRepository get _repo => inject();
 
   @override
-  Future<int> call() => _repo.insert(lat: fix.lat, lon: fix.lon, time: fix.time, runId: runId);
+  Future<int> execute() => _repo.insert(lat: fix.lat, lon: fix.lon, time: fix.time, runId: runId);
 }

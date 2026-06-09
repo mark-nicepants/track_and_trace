@@ -1,3 +1,4 @@
+import 'package:app/data/http/auth_interceptor.dart';
 import 'package:app/data/http/http_logging_interceptor.dart';
 import 'package:app/shared/config/app_env.dart';
 import 'package:dio/dio.dart';
@@ -11,6 +12,7 @@ Dio buildDio(AppEnv env) {
       headers: const {'Accept': 'application/json'},
     ),
   );
+  dio.interceptors.add(AuthInterceptor(env.apiKey));
   if (env.enableLogging) {
     dio.interceptors.add(HttpLoggingInterceptor());
   }

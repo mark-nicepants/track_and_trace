@@ -15,6 +15,7 @@ import 'package:app/shared/contracts/i_logger.dart';
 import 'package:app/shared/contracts/i_preference_service.dart';
 import 'package:app/shared/inject.dart';
 import 'package:app/ui/features/dev/env_switcher_notifier.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,7 +37,7 @@ Future<void> main() async {
   final env = AppEnv.fromJson(envName, jsonDecode(raw) as Map<String, Object?>);
   injector.registerSingleton<AppEnv>(env);
 
-  injector.registerSingleton<ILogger>(LoggerService(writer: writer, consoleEnabled: env.enableLogging));
+  injector.registerSingleton<ILogger>(LoggerService(writer: writer, consoleEnabled: !kReleaseMode));
   injector.registerSingleton<IsoClock>(const IsoClock());
 
   registerDataModule();

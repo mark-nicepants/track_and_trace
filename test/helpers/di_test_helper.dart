@@ -43,7 +43,7 @@ Future<void> setupTestDi({
   await injector.reset();
   injector.registerSingleton<IPreferenceService>(prefs ?? InMemoryPreferenceService());
   injector.registerSingleton<ILogger>(logger ?? const NoopLogger());
-  injector.registerSingleton<AppEnv>(env ?? AppEnv('test', 'http://test.local', false, ''));
+  injector.registerSingleton<AppEnv>(env ?? AppEnv('test', 'http://test.local', false, '', ''));
   injector.registerSingleton<Dio>(dio ?? Dio());
   injector.registerSingleton<IsoClock>(clock ?? const IsoClock());
   injector.registerSingleton<IPermissionService>(permissions ?? InMemoryPermissionService());

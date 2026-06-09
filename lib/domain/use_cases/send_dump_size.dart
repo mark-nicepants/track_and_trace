@@ -16,5 +16,5 @@ class SendDumpSize(final String runId, final DumpSize dumpSize) extends UseCase<
   IsoClock get _clock => inject();
 
   @override
-  Future<void> call() => _repo.sendDumpSize(dumpSizeDtoOf(runId: runId, time: _clock.nowIso(), dumpSize: dumpSize));
+  Future<void> execute() => _repo.sendDumpSize(dumpSizeDtoOf(runId: runId, time: _clock.nowIso(), dumpSize: dumpSize));
 }

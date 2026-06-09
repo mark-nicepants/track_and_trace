@@ -17,13 +17,12 @@ class NoNetworkDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L10n.translate;
     return PopScope(
       canPop: false,
       child: AlertDialog(
         key: dialogKey,
-        title: Text(l.noNetworkTitle),
-        content: SingleChildScrollView(child: Text(l.noNetworkBody)),
+        title: Text(L10n.translate.noNetworkTitle),
+        content: SingleChildScrollView(child: Text(L10n.translate.noNetworkBody)),
       ),
     );
   }
