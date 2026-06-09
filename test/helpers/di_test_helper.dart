@@ -8,6 +8,7 @@ import 'package:app/shared/contracts/i_permission_service.dart';
 import 'package:app/shared/contracts/i_preference_service.dart';
 import 'package:app/shared/inject.dart';
 import 'package:dio/dio.dart';
+import 'package:sqflite/sqflite.dart';
 
 /// Sets up a clean GetIt scope for a test. Pass overrides to swap in mocks.
 Future<void> setupTestDi({
@@ -17,6 +18,7 @@ Future<void> setupTestDi({
   Dio? dio,
   IsoClock? clock,
   IPermissionService? permissions,
+  Database? database,
 }) async {
   await injector.reset();
   injector.registerSingleton<IPreferenceService>(prefs ?? InMemoryPreferenceService());
@@ -25,6 +27,10 @@ Future<void> setupTestDi({
   injector.registerSingleton<Dio>(dio ?? Dio());
   injector.registerSingleton<IsoClock>(clock ?? const IsoClock());
   injector.registerSingleton<IPermissionService>(permissions ?? InMemoryPermissionService());
+  if (database != null) {
+    injector.registerSingletonAsync<Database>(() async => database);
+    await injector.allReady();
+  }
 }
 
 Future<void> tearDownTestDi() async {
