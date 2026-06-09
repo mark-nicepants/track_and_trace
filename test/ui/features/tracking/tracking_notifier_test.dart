@@ -3,6 +3,7 @@ import 'package:app/data/repositories/position_queue_repository.dart';
 import 'package:app/data/services/in_memory_foreground_tracking_service.dart';
 import 'package:app/data/services/in_memory_location_client.dart';
 import 'package:app/data/services/in_memory_preference_service.dart';
+import 'package:app/data/services/in_memory_sending_service.dart';
 import 'package:app/shared/contracts/i_location_client.dart';
 import 'package:app/ui/features/tracking/tracking_keys.dart';
 import 'package:app/ui/features/tracking/tracking_notifier.dart';
@@ -22,6 +23,7 @@ void main() {
   late InMemoryPreferenceService prefs;
   late InMemoryLocationClient client;
   late InMemoryForegroundTrackingService foreground;
+  late InMemorySendingService sending;
 
   setUp(() async {
     db = await databaseFactory.openDatabase(
@@ -34,7 +36,8 @@ void main() {
     prefs = InMemoryPreferenceService();
     client = InMemoryLocationClient();
     foreground = InMemoryForegroundTrackingService();
-    await setupTestDi(prefs: prefs, locationClient: client, foreground: foreground, database: db);
+    sending = InMemorySendingService();
+    await setupTestDi(prefs: prefs, locationClient: client, foreground: foreground, sending: sending, database: db);
   });
 
   tearDown(() async {
@@ -161,5 +164,18 @@ void main() {
     await notifier.start();
     expect(await prefs.readString(exitedCorrectlyKey), 'false');
     expect(foreground.startCalls, hasLength(2));
+  });
+
+  test('start() also starts the SendingService; stop() stops it', () async {
+    final container = makeContainer();
+    final notifier = container.read(trackingProvider.notifier);
+
+    await notifier.start();
+    expect(sending.startCallCount, 1);
+    expect(sending.isRunning, isTrue);
+
+    await notifier.stop();
+    expect(sending.stopCallCount, 1);
+    expect(sending.isRunning, isFalse);
   });
 }

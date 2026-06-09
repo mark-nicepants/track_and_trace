@@ -70,5 +70,14 @@
   "setupOfflineBanner": "Geen verbinding — opgeslagen lijst gebruikt.",
   "@setupOfflineBanner": {
     "description": "Setup screen — banner when machine types are loaded from offline cache."
+  },
+
+  "noNetworkTitle": "Geen netwerk",
+  "@noNetworkTitle": {
+    "description": "NoNetworkDialog title. Dutch verbatim per FEATURES.md §12 (mirrors Android `no_network_detected`)."
+  },
+  "noNetworkBody": "Momenteel is er geen internetverbinding beschikbaar. Deze app vereist een internetverbinding om correct te functioneren. De tracking vindt plaats op basis van GPS en gaat door op de achtergrond. Zonder internetverbinding is het niet mogelijk om feedback te geven. Zodra de internetverbinding hersteld is, zal de app weer volledig operationeel zijn en zullen de trackinggegevens naar Gisib worden verstuurd. U kunt ook op 'Stop' drukken. De tracking stopt dan en u wordt teruggestuurd naar het beginscherm.",
+  "@noNetworkBody": {
+    "description": "NoNetworkDialog body. Dutch verbatim per FEATURES.md §12 (mirrors Android `no_network_body_text`)."
   }
 }

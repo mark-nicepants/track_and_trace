@@ -25,5 +25,8 @@
   "setupCapacityTooLarge": "Geef een geldige inhoud, maximaal 50 m³.",
   "setupLoadingMachineTypes": "Machine types ophalen",
   "setupStart": "Start",
-  "setupOfflineBanner": "Geen verbinding — opgeslagen lijst gebruikt."
+  "setupOfflineBanner": "Geen verbinding — opgeslagen lijst gebruikt.",
+
+  "noNetworkTitle": "Geen netwerk",
+  "noNetworkBody": "Momenteel is er geen internetverbinding beschikbaar. Deze app vereist een internetverbinding om correct te functioneren. De tracking vindt plaats op basis van GPS en gaat door op de achtergrond. Zonder internetverbinding is het niet mogelijk om feedback te geven. Zodra de internetverbinding hersteld is, zal de app weer volledig operationeel zijn en zullen de trackinggegevens naar Gisib worden verstuurd. U kunt ook op 'Stop' drukken. De tracking stopt dan en u wordt teruggestuurd naar het beginscherm."
 }
