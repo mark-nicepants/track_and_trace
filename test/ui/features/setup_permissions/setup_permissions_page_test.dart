@@ -1,5 +1,3 @@
-import 'package:app/data/services/in_memory_permission_service.dart';
-import 'package:app/data/services/in_memory_preference_service.dart';
 import 'package:app/shared/contracts/i_permission_service.dart';
 import 'package:app/ui/features/setup_permissions/setup_permissions_page.dart';
 import 'package:app/ui/shared/l10n/generated/app_localizations.dart';
@@ -9,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../helpers/di_test_helper.dart';
+import '../../../helpers/fakes/in_memory_permission_service.dart';
+import '../../../helpers/fakes/in_memory_preference_service.dart';
 
 Widget _harness() {
   return ProviderScope(

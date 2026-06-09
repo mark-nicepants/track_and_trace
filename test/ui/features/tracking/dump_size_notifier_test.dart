@@ -4,8 +4,6 @@ import 'dart:typed_data';
 
 import 'package:app/data/data_source/position_queue_dao.dart';
 import 'package:app/data/repositories/track_and_trace_repository.dart';
-import 'package:app/data/services/in_memory_prediction_service.dart';
-import 'package:app/data/services/in_memory_preference_service.dart';
 import 'package:app/domain/entities/activity_state.dart';
 import 'package:app/domain/entities/dump_size.dart';
 import 'package:app/ui/features/setup/setup_keys.dart';
@@ -18,6 +16,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../../../helpers/di_test_helper.dart';
+import '../../../helpers/fakes/in_memory_prediction_service.dart';
+import '../../../helpers/fakes/in_memory_preference_service.dart';
 
 /// Recording http client adapter. Captures every request body (decoded
 /// JSON) by path and returns whatever response the test scripts. Lets us

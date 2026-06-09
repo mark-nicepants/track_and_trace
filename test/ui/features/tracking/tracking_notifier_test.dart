@@ -3,11 +3,6 @@ import 'dart:convert';
 import 'package:app/data/data_source/position_queue_dao.dart';
 import 'package:app/data/repositories/position_queue_repository.dart';
 import 'package:app/data/repositories/track_and_trace_repository.dart';
-import 'package:app/data/services/in_memory_foreground_tracking_service.dart';
-import 'package:app/data/services/in_memory_location_client.dart';
-import 'package:app/data/services/in_memory_prediction_service.dart';
-import 'package:app/data/services/in_memory_preference_service.dart';
-import 'package:app/data/services/in_memory_sending_service.dart';
 import 'package:app/domain/entities/activity_state.dart';
 import 'package:app/shared/contracts/i_location_client.dart';
 import 'package:app/ui/features/setup/setup_keys.dart';
@@ -21,6 +16,11 @@ import 'package:http_mock_adapter/http_mock_adapter.dart' hide Matcher;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../../../helpers/di_test_helper.dart';
+import '../../../helpers/fakes/in_memory_foreground_tracking_service.dart';
+import '../../../helpers/fakes/in_memory_location_client.dart';
+import '../../../helpers/fakes/in_memory_prediction_service.dart';
+import '../../../helpers/fakes/in_memory_preference_service.dart';
+import '../../../helpers/fakes/in_memory_sending_service.dart';
 
 void main() {
   setUpAll(() {
@@ -37,7 +37,7 @@ void main() {
   late Dio dio;
   late DioAdapter adapter;
 
-  Future<void> seedSetup({String machineTypeId = 'mt-1', double capacity = 12.5}) async {
+  Future<void> seedSetup({String machineTypeId = 'mt-1', num capacity = 12.5}) async {
     await prefs.writeString(machineTypeKey, jsonEncode({'id': machineTypeId, 'displayName': 'Loader'}));
     await prefs.writeString(machineCapacityKey, capacity.toString());
   }

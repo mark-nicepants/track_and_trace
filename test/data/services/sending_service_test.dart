@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:app/data/data_source/position_queue_dao.dart';
 import 'package:app/data/repositories/position_queue_repository.dart';
 import 'package:app/data/repositories/track_and_trace_repository.dart';
-import 'package:app/data/services/in_memory_connectivity_service.dart';
 import 'package:app/data/services/sending_service.dart';
 import 'package:app/shared/inject.dart';
 import 'package:dio/dio.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../../helpers/di_test_helper.dart';
+import '../../helpers/fakes/in_memory_connectivity_service.dart';
 
 /// Spy/script for `POST /create-locations`. http_mock_adapter consumes
 /// each registered handler after a single match, which makes multi-batch

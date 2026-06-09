@@ -1,5 +1,4 @@
 import 'package:app/data/data_source/position_queue_dao.dart';
-import 'package:app/data/services/in_memory_connectivity_service.dart';
 import 'package:app/ui/features/tracking/no_network_dialog.dart';
 import 'package:app/ui/features/tracking/tracking_page.dart';
 import 'package:app/ui/shared/l10n/generated/app_localizations.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../../../helpers/di_test_helper.dart';
+import '../../../helpers/fakes/in_memory_connectivity_service.dart';
 
 Widget _harness() {
   return ProviderScope(

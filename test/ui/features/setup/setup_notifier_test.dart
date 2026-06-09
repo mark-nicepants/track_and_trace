@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:app/data/repositories/track_and_trace_repository.dart';
-import 'package:app/data/services/in_memory_preference_service.dart';
 import 'package:app/domain/entities/machine_type.dart';
 import 'package:app/ui/features/setup/setup_keys.dart';
 import 'package:app/ui/features/setup/setup_notifier.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart' hide Matcher;
 
 import '../../../helpers/di_test_helper.dart';
+import '../../../helpers/fakes/in_memory_preference_service.dart';
 
 void main() {
   late Dio dio;
@@ -161,7 +161,7 @@ void main() {
     expect(decoded['displayName'], 'Loader');
 
     final capacity = await prefs.readString(machineCapacityKey);
-    expect(double.parse(capacity!), 20.0);
+    expect(num.parse(capacity!), 20);
   });
 
   test('confirm() without selection returns false and writes nothing', () async {

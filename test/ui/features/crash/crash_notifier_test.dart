@@ -1,4 +1,3 @@
-import 'package:app/data/services/in_memory_preference_service.dart';
 import 'package:app/shared/contracts/i_crash_report_service.dart';
 import 'package:app/ui/features/crash/crash_detected_provider.dart';
 import 'package:app/ui/features/crash/crash_notifier.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../helpers/di_test_helper.dart';
+import '../../../helpers/fakes/in_memory_preference_service.dart';
 
 class _FakeCrashService implements ICrashReportService {
   _FakeCrashService(this.result);

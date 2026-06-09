@@ -1,5 +1,3 @@
-import 'package:app/data/services/in_memory_permission_service.dart';
-import 'package:app/data/services/in_memory_preference_service.dart';
 import 'package:app/shared/contracts/i_crash_report_service.dart';
 import 'package:app/shared/contracts/i_preference_service.dart';
 import 'package:app/ui/features/crash/crash_page.dart';
@@ -13,6 +11,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../helpers/di_test_helper.dart';
+import '../../../helpers/fakes/in_memory_permission_service.dart';
+import '../../../helpers/fakes/in_memory_preference_service.dart';
 
 class _ScriptedCrashService implements ICrashReportService {
   _ScriptedCrashService({required this.result});

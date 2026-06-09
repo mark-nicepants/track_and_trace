@@ -226,7 +226,7 @@ class TrackingNotifier extends Notifier<TrackingState> {
       final json = jsonDecode(typeRaw) as Map<String, Object?>;
       final id = json['id'];
       if (id is! String) return null;
-      final capacity = double.tryParse(capacityRaw);
+      final capacity = num.tryParse(capacityRaw);
       if (capacity == null) return null;
       return (id, capacity);
     } catch (_) {

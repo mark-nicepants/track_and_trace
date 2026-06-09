@@ -1,4 +1,4 @@
-import 'package:app/data/services/in_memory_permission_service.dart';
+import '../../helpers/fakes/in_memory_permission_service.dart';
 import 'package:app/shared/contracts/i_permission_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 

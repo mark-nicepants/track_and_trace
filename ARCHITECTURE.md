@@ -84,11 +84,19 @@ lib/
   shared/
     inject.dart                       # inject<T>() + injector
     log.dart                          # global `log` accessor
+    clock.dart                        # IsoClock — injected wall clock
     config/
       app_env.dart                    # value class, registered in GetIt
-    contracts/
+    contracts/                        # cross-layer interfaces
       i_logger.dart
       i_preference_service.dart
+      i_crash_report_service.dart
+      i_permission_service.dart
+      i_location_client.dart
+      i_foreground_tracking_service.dart
+      i_sending_service.dart
+      i_prediction_service.dart
+      i_connectivity_service.dart
   data/
     di/
       data_module.dart                # registers dio + repos + services
@@ -100,13 +108,13 @@ lib/
       http_logging_interceptor.dart
     models/                           # DTOs
       user_dto.dart
+    data_source/                      # on-device persistence (sqflite DAOs)
+      position_queue_dao.dart
     repositories/
       user_repository.dart            # concrete; no abstract interface
-    services/                         # platform-package wrappers
+    services/                         # platform-package wrappers (prod only)
       preference_service.dart
-      in_memory_preference_service.dart
       logger_service.dart
-      noop_logger.dart
   domain/
     entities/                         # immutable, Equatable
       user.dart
@@ -155,6 +163,11 @@ test/
   helpers/
     di_test_helper.dart
     fixtures.dart
+    fakes/                            # in-memory/no-op contract impls
+      in_memory_preference_service.dart
+      in_memory_permission_service.dart
+      noop_logger.dart
+      …
 tool/
   check_architecture_violations.dart
   clone_template.dart
@@ -276,6 +289,12 @@ concrete-only when no swap is plausible.
 
 Naming convention: `IFooService` for the interface, `FooService` for the
 production impl, `InMemoryFooService` for test impls.
+
+Production implementations live in `lib/data/services/`. Test doubles
+(`InMemoryX`, `NoopX`) live in `test/helpers/fakes/` so they do not ship
+with the production binary. The interfaces themselves live in
+`lib/shared/contracts/` so both production and test code can depend on them
+without crossing layer boundaries.
 
 ### Dependencies on packages (canonical list)
 
@@ -480,10 +499,9 @@ ILogger get log => inject<ILogger>();
 
 Widgets and other consumers call `log.info('…')` directly. This both centralizes
 the logger and keeps `inject<>` out of the widget tree. `lib/shared/` may not
-import from `lib/data/`, `lib/domain/`, or `lib/ui/` — only abstractions
-(e.g. `ILogger`) that themselves live within those layers may be referenced.
-In practice, `log.dart` imports `ILogger` from `lib/data/services/`; the rule is
-that `shared/` introduces no new transitive coupling.
+import from `lib/data/`, `lib/domain/`, or `lib/ui/`; all cross-layer
+interfaces (e.g. `ILogger`, `IPreferenceService`) live in
+`lib/shared/contracts/` so `shared/` introduces no transitive coupling.
 
 ---
 
@@ -682,7 +700,7 @@ ever visible.
 
 ## Logging
 
-- `ILogger` interface in `data/services/`.
+- `ILogger` interface in `lib/shared/contracts/`.
 - `LoggerService` wraps `package:logger`.
 - Registered in GetIt early in bootstrap.
 - Accessed via the global `log` in `lib/shared/log.dart`:
@@ -700,6 +718,8 @@ log.error('Sync failed', error, stack);
 
 - **`mocktail`** for mocks. No codegen.
 - **`InMemoryPreferenceService`** is the default `IPreferenceService` in tests.
+  All fakes live in `test/helpers/fakes/` and are imported via relative paths
+  from the tests that use them.
 - Test layout mirrors `lib/`:
 
 ```

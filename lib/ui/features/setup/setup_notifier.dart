@@ -33,13 +33,13 @@ class SetupNotifier extends AsyncNotifier<SetupState> {
     state = AsyncData(current.copyWith(selectedType: type));
   }
 
-  void setCapacity(double? capacity) {
+  void setCapacity(num? capacity) {
     final current = state.value;
     if (current == null) return;
     state = AsyncData(current.copyWith(capacity: capacity));
   }
 
-  /// Persists `selectedType` (as JSON) and `capacity` (as a double string) to
+  /// Persists `selectedType` (as JSON) and `capacity` (as a numeric string) to
   /// [IPreferenceService]. Returns `true` when both values were present and
   /// successfully written.
   Future<bool> confirm() async {
@@ -72,9 +72,9 @@ class SetupNotifier extends AsyncNotifier<SetupState> {
     await _prefs.writeString(machineTypesCacheKey, json);
   }
 
-  Future<(MachineType?, double?)> _readSaved() async {
+  Future<(MachineType?, num?)> _readSaved() async {
     MachineType? type;
-    double? capacity;
+    num? capacity;
     final typeRaw = await _prefs.readString(machineTypeKey);
     if (typeRaw != null && typeRaw.isNotEmpty) {
       try {
@@ -85,7 +85,7 @@ class SetupNotifier extends AsyncNotifier<SetupState> {
     }
     final capacityRaw = await _prefs.readString(machineCapacityKey);
     if (capacityRaw != null && capacityRaw.isNotEmpty) {
-      capacity = double.tryParse(capacityRaw);
+      capacity = num.tryParse(capacityRaw);
     }
     return (type, capacity);
   }

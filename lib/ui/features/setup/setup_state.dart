@@ -8,7 +8,7 @@ class SetupState(
   final List<MachineType> machineTypes,
   final bool fromCache,
   final MachineType? selectedType,
-  final double? capacity,
+  final num? capacity,
   final bool saving,
 ) extends Equatable {
   static final SetupState initial = SetupState(const [], false, null, null, false);
@@ -17,7 +17,7 @@ class SetupState(
     List<MachineType>? machineTypes,
     bool? fromCache,
     MachineType? selectedType,
-    double? capacity,
+    num? capacity,
     bool? saving,
   }) => SetupState(
     machineTypes ?? this.machineTypes,

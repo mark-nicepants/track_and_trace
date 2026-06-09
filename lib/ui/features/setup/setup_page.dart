@@ -16,7 +16,7 @@ class SetupPage extends HookConsumerWidget {
 
   static const String path = '/setup';
   static const String name = 'setup';
-  static const double maxCapacityM3 = 50;
+  static const num maxCapacityM3 = 50;
 
   static GoRoute route() => GoRoute(path: path, name: name, builder: (context, state) => const SetupPage());
 
@@ -146,12 +146,12 @@ class _LoadedView extends HookConsumerWidget {
                 border: const OutlineInputBorder(),
               ),
               onChanged: (value) {
-                final parsed = double.tryParse(value.replaceAll(',', '.'));
+                final parsed = num.tryParse(value.replaceAll(',', '.'));
                 notifier.setCapacity(parsed);
               },
               validator: (value) {
                 final raw = (value ?? '').replaceAll(',', '.').trim();
-                final parsed = double.tryParse(raw);
+                final parsed = num.tryParse(raw);
                 if (parsed == null || parsed <= 0) return L10n.translate.setupCapacityInvalid;
                 if (parsed > SetupPage.maxCapacityM3) return L10n.translate.setupCapacityTooLarge;
                 return null;
@@ -170,7 +170,7 @@ class _LoadedView extends HookConsumerWidget {
   }
 }
 
-String _formatCapacity(double v) {
-  if (v == v.truncateToDouble()) return v.toStringAsFixed(0);
+String _formatCapacity(num v) {
+  if (v is int || v == v.truncate()) return v.toInt().toString();
   return v.toString();
 }
