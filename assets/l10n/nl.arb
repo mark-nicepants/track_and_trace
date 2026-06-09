@@ -16,5 +16,14 @@
   "permissionsPermanentlyDeniedBody": "Het lijkt erop dat u de locatie toestemming permanent hebt afgewezen…",
   "permissionsAccept": "Accepteer",
   "permissionsClose": "Sluiten",
-  "permissionsOpenSettings": "Open instellingen"
+  "permissionsOpenSettings": "Open instellingen",
+
+  "setupMachineTypeLabel": "Type kipper/kiepwagen",
+  "setupMachineTypeHint": "Selecteer een kipper/kiepwagen",
+  "setupCapacityLabel": "Inhoud van kipper/kiepwagen in kuubs/m³",
+  "setupCapacityInvalid": "Geef een geldige inhoud, een positief getal.",
+  "setupCapacityTooLarge": "Geef een geldige inhoud, maximaal 50 m³.",
+  "setupLoadingMachineTypes": "Machine types ophalen",
+  "setupStart": "Start",
+  "setupOfflineBanner": "Geen verbinding — opgeslagen lijst gebruikt."
 }

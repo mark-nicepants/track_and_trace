@@ -37,5 +37,38 @@
   },
   "permissionsAccept": "Accepteer",
   "permissionsClose": "Sluiten",
-  "permissionsOpenSettings": "Open instellingen"
+  "permissionsOpenSettings": "Open instellingen",
+
+  "setupMachineTypeLabel": "Type kipper/kiepwagen",
+  "@setupMachineTypeLabel": {
+    "description": "Setup screen — machine-type dropdown label. Dutch verbatim per FEATURES.md §12."
+  },
+  "setupMachineTypeHint": "Selecteer een kipper/kiepwagen",
+  "@setupMachineTypeHint": {
+    "description": "Setup screen — empty-dropdown hint. Dutch verbatim per FEATURES.md §12."
+  },
+  "setupCapacityLabel": "Inhoud van kipper/kiepwagen in kuubs/m³",
+  "@setupCapacityLabel": {
+    "description": "Setup screen — capacity input label. Dutch verbatim per FEATURES.md §12."
+  },
+  "setupCapacityInvalid": "Geef een geldige inhoud, een positief getal.",
+  "@setupCapacityInvalid": {
+    "description": "Setup screen — capacity validation error for non-positive values. Dutch verbatim per FEATURES.md §12."
+  },
+  "setupCapacityTooLarge": "Geef een geldige inhoud, maximaal 50 m³.",
+  "@setupCapacityTooLarge": {
+    "description": "Setup screen — soft upper-bound (50 m³) validation error per FEATURES.md §'Suggested Tiny Additions'."
+  },
+  "setupLoadingMachineTypes": "Machine types ophalen",
+  "@setupLoadingMachineTypes": {
+    "description": "Setup screen — loading-types caption. Dutch verbatim per FEATURES.md §12."
+  },
+  "setupStart": "Start",
+  "@setupStart": {
+    "description": "Setup screen — confirm button. Dutch verbatim per FEATURES.md §12."
+  },
+  "setupOfflineBanner": "Geen verbinding — opgeslagen lijst gebruikt.",
+  "@setupOfflineBanner": {
+    "description": "Setup screen — banner when machine types are loaded from offline cache."
+  }
 }
