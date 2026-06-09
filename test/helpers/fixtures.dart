@@ -1,9 +1,15 @@
+import 'package:app/data/models/create_locations_request_dto.dart';
 import 'package:app/data/models/dump_size_dto.dart';
 import 'package:app/data/models/feedback_dto.dart';
+import 'package:app/data/models/get_nearest_depot_request_dto.dart';
+import 'package:app/data/models/get_status_request_dto.dart';
 import 'package:app/data/models/machine_type_dto.dart';
 import 'package:app/data/models/nearest_depot_dto.dart';
 import 'package:app/data/models/run_dto.dart';
+import 'package:app/data/models/start_run_request_dto.dart';
 import 'package:app/data/models/status_timestamp_dto.dart';
+import 'package:app/data/models/stop_run_request_dto.dart';
+import 'package:app/data/models/sync_run_data_request_dto.dart';
 import 'package:app/data/models/tracking_position_dto.dart';
 import 'package:app/domain/entities/activity_state.dart';
 import 'package:app/domain/entities/feedback.dart';
@@ -66,3 +72,21 @@ StatusTimestampDto statusTimestampDto({String time = _iso, String name = 'DRIVIN
 
 StatusTimestamp statusTimestamp({String time = _iso, ActivityState name = ActivityState.driving}) =>
     StatusTimestamp(time, name);
+
+StartRunRequestDto startRunRequestDto({String startTime = _iso, String machineTypeId = 'mt-1', num capacity = 12}) =>
+    StartRunRequestDto(startTime, machineTypeId, capacity);
+
+StopRunRequestDto stopRunRequestDto({String runId = 'run-1', String endTime = _iso}) =>
+    StopRunRequestDto(runId, endTime);
+
+CreateLocationsRequestDto createLocationsRequestDto({List<TrackingPositionDto>? locations}) =>
+    CreateLocationsRequestDto(locations ?? [trackingPositionDto()]);
+
+GetStatusRequestDto getStatusRequestDto({String runId = 'run-1', String time = _iso, String activity = 'DRIVING'}) =>
+    GetStatusRequestDto(runId, time, activity);
+
+GetNearestDepotRequestDto getNearestDepotRequestDto({String runId = 'run-1', String time = _iso}) =>
+    GetNearestDepotRequestDto(runId, time);
+
+SyncRunDataRequestDto syncRunDataRequestDto({String runId = 'run-1', String time = _iso, String quantity = 'HALF'}) =>
+    SyncRunDataRequestDto(runId, time, quantity);
