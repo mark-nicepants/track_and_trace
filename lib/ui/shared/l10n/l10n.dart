@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart' as intl;
 
 /// Static façade around the generated [AppLocalizations] so widgets can do
-/// `L10n.translate.helloUser('Mark')` without passing `BuildContext` around.
+/// `L10n.translate.appTitle` without passing `BuildContext` around.
 ///
 /// Initialised once from [App.onGenerateTitle] (which always runs with a
 /// localised context). Re-runs on locale change because `onGenerateTitle`

@@ -1,4 +1,4 @@
 {
-  "apiBaseUrl": "https://api.staging.example.com",
+  "apiBaseUrl": "https://track-and-trace-staging-283621971711.europe-west4.run.app",
   "enableLogging": true
 }

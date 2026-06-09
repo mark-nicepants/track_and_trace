@@ -2,7 +2,6 @@
   "@@locale": "nl",
 
   "appTitle": "Track & Trace",
-  "helloUser": "Hallo, {name}",
 
   "envSwitcherTitle": "Omgeving",
   "envSwitcherActive": "Actief: {env}",

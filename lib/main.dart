@@ -4,6 +4,7 @@ import 'package:app/app.dart';
 import 'package:app/data/di/data_module.dart';
 import 'package:app/data/services/logger_service.dart';
 import 'package:app/data/services/preference_service.dart';
+import 'package:app/shared/clock.dart';
 import 'package:app/shared/config/app_env.dart';
 import 'package:app/shared/contracts/i_logger.dart';
 import 'package:app/shared/contracts/i_preference_service.dart';
@@ -18,6 +19,7 @@ Future<void> main() async {
 
   injector.registerSingleton<IPreferenceService>(PreferenceService());
   injector.registerSingleton<ILogger>(LoggerService());
+  injector.registerSingleton<IsoClock>(const IsoClock());
 
   final selectedName = await inject<IPreferenceService>().readString(selectedEnvKey) ?? AppEnv.fallbackName;
   final envName = AppEnv.knownNames.contains(selectedName) ? selectedName : AppEnv.fallbackName;

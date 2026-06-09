@@ -19,7 +19,9 @@ android {
         applicationId = "com.datacadabra.trackandtrace"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        // Old Android reference pinned minSdk 23. Bumped to 26 because
+        // tracelet_android (BLE GPS dependency) requires API 26.
+        minSdk = 26
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

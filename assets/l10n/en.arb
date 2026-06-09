@@ -6,14 +6,6 @@
     "description": "App title shown in the system task switcher and AppBar."
   },
 
-  "helloUser": "Hello, {name}",
-  "@helloUser": {
-    "description": "Greeting on the home page.",
-    "placeholders": {
-      "name": { "type": "String", "example": "Alice" }
-    }
-  },
-
   "envSwitcherTitle": "Environment",
   "envSwitcherActive": "Active: {env}",
   "@envSwitcherActive": {

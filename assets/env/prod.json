@@ -1,4 +1,4 @@
 {
-  "apiBaseUrl": "https://api.example.com",
+  "apiBaseUrl": "https://track-and-trace-prd-283621971711.europe-west4.run.app",
   "enableLogging": false
 }
