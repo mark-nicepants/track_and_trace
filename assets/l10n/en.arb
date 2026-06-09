@@ -125,5 +125,38 @@
   "trackingNo": "Nee",
   "trackingStoppingRun": "Aan het stoppen",
   "trackingStartingRun": "Aan het opstarten",
-  "trackingClickStartToBegin": "Klik op Start om te beginnen"
+  "trackingClickStartToBegin": "Klik op Start om te beginnen",
+
+  "dumpSizeTitle": "Hoeveel wordt er ongeveer gestort?",
+  "@dumpSizeTitle": {
+    "description": "DumpSizeDialog title. Dutch verbatim per FEATURES.md §12 (mirrors Android `how_much_is_dumped`)."
+  },
+  "dumpSizeQuarter": "Kwart bak",
+  "@dumpSizeQuarter": {
+    "description": "DumpSizeDialog option — 1/4. Dutch verbatim per FEATURES.md §12."
+  },
+  "dumpSizeHalf": "Halve bak",
+  "@dumpSizeHalf": {
+    "description": "DumpSizeDialog option — 1/2. Dutch verbatim per FEATURES.md §12."
+  },
+  "dumpSizeThreeQuarter": "Driekwart bak",
+  "@dumpSizeThreeQuarter": {
+    "description": "DumpSizeDialog option — 3/4. Dutch verbatim per FEATURES.md §12."
+  },
+  "dumpSizeFull": "Hele bak",
+  "@dumpSizeFull": {
+    "description": "DumpSizeDialog option — 1/1. Dutch verbatim per FEATURES.md §12."
+  },
+  "dumpSizeUnspecified": "Niet gespecificeerd",
+  "@dumpSizeUnspecified": {
+    "description": "DumpSizeDialog option — other / unspecified. Dutch verbatim per FEATURES.md §12."
+  },
+  "dumpSizeConfirm": "Bevestigen",
+  "@dumpSizeConfirm": {
+    "description": "DumpSizeDialog confirm button. Dutch verbatim per FEATURES.md §12."
+  },
+  "dumpSizeDismiss": "Afwijzen",
+  "@dumpSizeDismiss": {
+    "description": "DumpSizeDialog dismiss button. Dutch verbatim per FEATURES.md §12."
+  }
 }

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:app/domain/entities/activity_state.dart';
 import 'package:app/ui/features/main/main_page.dart';
+import 'package:app/ui/features/tracking/dump_size_dialog.dart';
+import 'package:app/ui/features/tracking/dump_size_notifier.dart';
 import 'package:app/ui/features/tracking/no_network_dialog.dart';
 import 'package:app/ui/features/tracking/sending_providers.dart';
 import 'package:app/ui/features/tracking/tracking_notifier.dart';
@@ -47,6 +49,40 @@ class TrackingPage extends HookConsumerWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) => unawaited(notifier.start()));
       return () => unawaited(WakelockPlus.disable());
     }, const []);
+
+    // Auto-show / auto-dismiss the DumpSizeDialog (US-009). Mounting the
+    // provider also wires its ref.listen on trackingProvider, so the
+    // dump-size state machine reacts to DUMPING transitions without
+    // anyone watching its value.
+    final dumpSizeVisible = ref.watch(dumpSizeProvider);
+    final dumpDialogOpen = useRef<bool>(false);
+    if (dumpSizeVisible && !dumpDialogOpen.value) {
+      dumpDialogOpen.value = true;
+      final dumpNotifier = ref.read(dumpSizeProvider.notifier);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        unawaited(
+          showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => DumpSizeDialog(
+              onConfirm: (size) {
+                dumpNotifier.confirm(size);
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+              onDismiss: () {
+                dumpNotifier.dismiss();
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            ),
+          ).whenComplete(() => dumpDialogOpen.value = false),
+        );
+      });
+    } else if (!dumpSizeVisible && dumpDialogOpen.value) {
+      // Auto-confirm timer fired (or programmatic dismiss) while the
+      // dialog is open — pop it.
+      dumpDialogOpen.value = false;
+      Navigator.of(context, rootNavigator: true).pop();
+    }
 
     // Auto-show / auto-dismiss the NoNetworkDialog (US-007).
     final dialogOpen = useRef<bool>(false);

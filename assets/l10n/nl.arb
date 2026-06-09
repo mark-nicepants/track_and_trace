@@ -50,5 +50,14 @@
   "trackingNo": "Nee",
   "trackingStoppingRun": "Aan het stoppen",
   "trackingStartingRun": "Aan het opstarten",
-  "trackingClickStartToBegin": "Klik op Start om te beginnen"
+  "trackingClickStartToBegin": "Klik op Start om te beginnen",
+
+  "dumpSizeTitle": "Hoeveel wordt er ongeveer gestort?",
+  "dumpSizeQuarter": "Kwart bak",
+  "dumpSizeHalf": "Halve bak",
+  "dumpSizeThreeQuarter": "Driekwart bak",
+  "dumpSizeFull": "Hele bak",
+  "dumpSizeUnspecified": "Niet gespecificeerd",
+  "dumpSizeConfirm": "Bevestigen",
+  "dumpSizeDismiss": "Afwijzen"
 }
