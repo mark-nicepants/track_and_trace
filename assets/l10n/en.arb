@@ -19,7 +19,23 @@
   },
   "commonOk": "OK",
 
-  "setupPermissionsTitle": "Setup & Permissions",
-  "setupPermissionsHeading": "Track & Trace setup",
-  "setupPermissionsBody": "The setup and permission flow starts here."
+  "permissionsTitle": "Toestemming",
+  "@permissionsTitle": {
+    "description": "Header on the permissions screen. Dutch verbatim per FEATURES.md §12."
+  },
+  "permissionsLocationRationale": "Deze app heeft uw locatie nodig om de locaties bij te houden.",
+  "@permissionsLocationRationale": {
+    "description": "Location-permission rationale. Dutch verbatim per FEATURES.md §12."
+  },
+  "permissionsNotificationRationale": "Deze app heeft notificaties nodig om te laten zien dat de app bezig is.",
+  "@permissionsNotificationRationale": {
+    "description": "Notification-permission rationale. Dutch verbatim per FEATURES.md §12."
+  },
+  "permissionsPermanentlyDeniedBody": "Het lijkt erop dat u de locatie toestemming permanent hebt afgewezen…",
+  "@permissionsPermanentlyDeniedBody": {
+    "description": "Shown after a permanently-denied location permission. Dutch verbatim per FEATURES.md §12."
+  },
+  "permissionsAccept": "Accepteer",
+  "permissionsClose": "Sluiten",
+  "permissionsOpenSettings": "Open instellingen"
 }

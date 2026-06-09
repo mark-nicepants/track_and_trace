@@ -10,7 +10,11 @@
   "envSwitcherRestartBody": "Geselecteerde omgeving gewijzigd naar \"{env}\". Sluit en open de app om toe te passen.",
   "commonOk": "OK",
 
-  "setupPermissionsTitle": "Setup en rechten",
-  "setupPermissionsHeading": "Track & Trace setup",
-  "setupPermissionsBody": "De setup- en permissiestroom start hier."
+  "permissionsTitle": "Toestemming",
+  "permissionsLocationRationale": "Deze app heeft uw locatie nodig om de locaties bij te houden.",
+  "permissionsNotificationRationale": "Deze app heeft notificaties nodig om te laten zien dat de app bezig is.",
+  "permissionsPermanentlyDeniedBody": "Het lijkt erop dat u de locatie toestemming permanent hebt afgewezen…",
+  "permissionsAccept": "Accepteer",
+  "permissionsClose": "Sluiten",
+  "permissionsOpenSettings": "Open instellingen"
 }
