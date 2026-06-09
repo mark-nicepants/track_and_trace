@@ -66,5 +66,17 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Deze app heeft uw locatie nodig om de locaties bij te houden.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Deze app heeft uw locatie nodig om de locaties bij te houden, ook wanneer u het scherm uit zet.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Deze app heeft uw locatie nodig om de locaties bij te houden, ook wanneer u het scherm uit zet.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>fetch</string>
+		<string>processing</string>
+	</array>
 </dict>
 </plist>

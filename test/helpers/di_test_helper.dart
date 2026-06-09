@@ -1,8 +1,13 @@
+import 'package:app/data/repositories/position_queue_repository.dart';
+import 'package:app/data/services/in_memory_foreground_tracking_service.dart';
+import 'package:app/data/services/in_memory_location_client.dart';
 import 'package:app/data/services/in_memory_permission_service.dart';
 import 'package:app/data/services/in_memory_preference_service.dart';
 import 'package:app/data/services/noop_logger.dart';
 import 'package:app/shared/clock.dart';
 import 'package:app/shared/config/app_env.dart';
+import 'package:app/shared/contracts/i_foreground_tracking_service.dart';
+import 'package:app/shared/contracts/i_location_client.dart';
 import 'package:app/shared/contracts/i_logger.dart';
 import 'package:app/shared/contracts/i_permission_service.dart';
 import 'package:app/shared/contracts/i_preference_service.dart';
@@ -18,6 +23,8 @@ Future<void> setupTestDi({
   Dio? dio,
   IsoClock? clock,
   IPermissionService? permissions,
+  ILocationClient? locationClient,
+  IForegroundTrackingService? foreground,
   Database? database,
 }) async {
   await injector.reset();
@@ -27,9 +34,12 @@ Future<void> setupTestDi({
   injector.registerSingleton<Dio>(dio ?? Dio());
   injector.registerSingleton<IsoClock>(clock ?? const IsoClock());
   injector.registerSingleton<IPermissionService>(permissions ?? InMemoryPermissionService());
+  injector.registerSingleton<ILocationClient>(locationClient ?? InMemoryLocationClient());
+  injector.registerSingleton<IForegroundTrackingService>(foreground ?? InMemoryForegroundTrackingService());
   if (database != null) {
     injector.registerSingletonAsync<Database>(() async => database);
     await injector.allReady();
+    injector.registerSingleton<PositionQueueRepository>(PositionQueueRepository());
   }
 }
 

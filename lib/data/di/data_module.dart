@@ -2,8 +2,12 @@ import 'package:app/data/data_source/position_queue_dao.dart';
 import 'package:app/data/http/dio_provider.dart';
 import 'package:app/data/repositories/position_queue_repository.dart';
 import 'package:app/data/repositories/track_and_trace_repository.dart';
+import 'package:app/data/services/foreground_tracking_service.dart';
 import 'package:app/data/services/permission_service.dart';
+import 'package:app/data/services/tracelet_location_client.dart';
 import 'package:app/shared/config/app_env.dart';
+import 'package:app/shared/contracts/i_foreground_tracking_service.dart';
+import 'package:app/shared/contracts/i_location_client.dart';
 import 'package:app/shared/contracts/i_permission_service.dart';
 import 'package:app/shared/inject.dart';
 import 'package:dio/dio.dart';
@@ -24,6 +28,8 @@ void registerDataModule() {
   injector.registerSingleton<Dio>(buildDio(env));
   injector.registerSingleton<TrackAndTraceRepository>(TrackAndTraceRepository());
   injector.registerSingleton<IPermissionService>(const PermissionService());
+  injector.registerSingleton<ILocationClient>(const TraceletLocationClient());
+  injector.registerSingleton<IForegroundTrackingService>(const ForegroundTrackingService());
 
   injector.registerSingletonAsync<Database>(() async {
     final path = p.join(await getDatabasesPath(), positionQueueDatabaseName);
