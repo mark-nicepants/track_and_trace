@@ -52,3 +52,4 @@ assets/env/local.json
 
 # Generated l10n files
 lib/ui/shared/l10n/generated
+old_android_app_reference
