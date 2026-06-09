@@ -50,6 +50,7 @@ dev_dependencies:
   http_mock_adapter: ^0.6.1
   sqflite_common_ffi: ^2.3.0
   fake_async: ^1.3.1
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
@@ -58,3 +59,13 @@ flutter:
     - assets/env/dev.json
     - assets/env/staging.json
     - assets/env/prod.json
+
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/icon/ic_launcher.png"
+  min_sdk_android: 26
+  adaptive_icon_background: "#3DDC84"
+  adaptive_icon_foreground: "assets/icon/ic_launcher_foreground.png"
+  adaptive_icon_monochrome: "assets/icon/ic_launcher_foreground.png"
