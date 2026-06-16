@@ -2,14 +2,14 @@ class RunDto(
   final String id,
   final String startTime,
   final String machineTypeId,
-  final num capacity,
+  final double capacity,
   final String? endTime,
 ) {
   factory RunDto.fromJson(Map<String, Object?> json) => RunDto(
     json['id']! as String,
     json['startTime']! as String,
     json['machineTypeId']! as String,
-    json['capacity']! as num,
+    (json['capacity']! as num).toDouble(),
     json['endTime'] as String?,
   );
 

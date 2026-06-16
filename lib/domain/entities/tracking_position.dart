@@ -5,9 +5,9 @@ import 'package:equatable/equatable.dart';
 /// `time` is the ISO-formatted timestamp (see `IsoClock`). `runId` may be
 /// null only while the sample is in flight before being associated with a
 /// run (matches the Android reference's `var runId: String? = null`).
-class TrackingPosition(final String time, final num latitude, final num longitude, final String? runId)
+class TrackingPosition(final String time, final double latitude, final double longitude, final String? runId)
     extends Equatable {
-  TrackingPosition copyWith({String? time, num? latitude, num? longitude, String? runId}) =>
+  TrackingPosition copyWith({String? time, double? latitude, double? longitude, String? runId}) =>
       TrackingPosition(time ?? this.time, latitude ?? this.latitude, longitude ?? this.longitude, runId ?? this.runId);
 
   bool get isValid {

@@ -13,7 +13,7 @@ class StartRun(final String machineTypeId, final num capacity) extends UseCase<S
 
   @override
   Future<String> execute() async {
-    final response = await _repo.sendStartRun(StartRunRequestDto(_clock.nowIso(), machineTypeId, capacity));
+    final response = await _repo.sendStartRun(StartRunRequestDto(_clock.nowIso(), machineTypeId, capacity.toDouble()));
     return response.runId;
   }
 }

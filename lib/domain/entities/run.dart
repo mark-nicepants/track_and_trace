@@ -10,10 +10,10 @@ class Run(
   final String id,
   final String startTime,
   final String machineTypeId,
-  final num capacity,
+  final double capacity,
   final String? endTime,
 ) extends Equatable {
-  Run copyWith({String? id, String? startTime, String? machineTypeId, num? capacity, String? endTime}) => Run(
+  Run copyWith({String? id, String? startTime, String? machineTypeId, double? capacity, String? endTime}) => Run(
     id ?? this.id,
     startTime ?? this.startTime,
     machineTypeId ?? this.machineTypeId,

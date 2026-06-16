@@ -25,15 +25,15 @@ const String _iso = '2026-06-09T12:34:56.789';
 
 TrackingPositionDto trackingPositionDto({
   String time = _iso,
-  num lat = 52.37,
-  num lon = 4.89,
+  double lat = 52.37,
+  double lon = 4.89,
   String? runId = 'run-1',
 }) => TrackingPositionDto(time, lat, lon, runId);
 
 TrackingPosition trackingPosition({
   String time = _iso,
-  num latitude = 52.37,
-  num longitude = 4.89,
+  double latitude = 52.37,
+  double longitude = 4.89,
   String? runId = 'run-1',
 }) => TrackingPosition(time, latitude, longitude, runId);
 
@@ -45,7 +45,7 @@ RunDto runDto({
   String id = 'run-1',
   String startTime = _iso,
   String machineTypeId = 'mt-1',
-  num capacity = 12,
+  double capacity = 12,
   String? endTime,
 }) => RunDto(id, startTime, machineTypeId, capacity, endTime);
 
@@ -53,7 +53,7 @@ Run run({
   String id = 'run-1',
   String startTime = _iso,
   String machineTypeId = 'mt-1',
-  num capacity = 12,
+  double capacity = 12,
   String? endTime,
 }) => Run(id, startTime, machineTypeId, capacity, endTime);
 
@@ -75,7 +75,7 @@ StatusTimestampDto statusTimestampDto({String time = _iso, String name = 'DRIVIN
 StatusTimestamp statusTimestamp({String time = _iso, ActivityState name = ActivityState.driving}) =>
     StatusTimestamp(time, name);
 
-StartRunRequestDto startRunRequestDto({String startTime = _iso, String machineTypeId = 'mt-1', num capacity = 12}) =>
+StartRunRequestDto startRunRequestDto({String startTime = _iso, String machineTypeId = 'mt-1', double capacity = 12}) =>
     StartRunRequestDto(startTime, machineTypeId, capacity);
 
 StopRunRequestDto stopRunRequestDto({String runId = 'run-1', String endTime = _iso}) =>
