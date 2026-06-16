@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:app/data/repositories/track_and_trace_repository.dart';
 import 'package:app/data/services/crash_report_service.dart';
 import 'package:app/data/services/rotating_file_log_writer.dart';
+import 'package:app/shared/config/app_env.dart';
 import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
 import 'package:dio/dio.dart';
@@ -23,7 +24,8 @@ void main() {
     writer = RotatingFileLogWriter(directory: Directory('${tempDir.path}/logs'));
     dio = Dio(BaseOptions(baseUrl: 'http://test.local'));
     adapter = DioAdapter(dio: dio);
-    await setupTestDi(dio: dio, trackAndTraceRepository: TrackAndTraceRepository());
+    final testEnv = AppEnv('test', 'http://test.local', false, '', '/forward-logs', 'api-key');
+    await setupTestDi(dio: dio, trackAndTraceRepository: TrackAndTraceRepository(), env: testEnv);
     service = CrashReportService(writer: writer);
   });
 

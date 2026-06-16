@@ -55,11 +55,17 @@ class TrackAndTraceRepository {
       guardDio(() => _dio.post<void>('/sync-run-data', data: request.toJson()));
 
   /// Multipart upload of [file] under the form-data part name [fieldName].
+  /// When [endpoint] is provided, POST to that URL instead of the default
+  /// `/forward-logs`. This is used for crash log forwarding to a separate
+  /// endpoint configured via [AppEnv.crashLogForwardingUrl].
   /// Mirrors the Android reference's `@Multipart @POST("/forward-logs")`.
-  Future<void> uploadLogfile(File file, {required String fieldName}) => guardDio(() async {
-    final form = FormData.fromMap({fieldName: await MultipartFile.fromFile(file.path)});
-    await _dio.post<void>('/forward-logs', data: form);
-  });
+  Future<void> uploadLogfile(File file, {required String fieldName, String? endpoint, String? apiKey}) =>
+      guardDio(() async {
+        final form = FormData.fromMap({fieldName: await MultipartFile.fromFile(file.path)});
+        final path = endpoint ?? '/forward-logs';
+        final options = Options(headers: apiKey != null ? {'X-API-Key': apiKey} : null);
+        await _dio.post<void>(path, data: form, options: options);
+      });
 
   Future<List<MachineTypeDto>> getMachineTypes() => guardDio(() async {
     final response = await _dio.post<List<Object?>>('/get-machine-types');

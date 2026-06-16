@@ -54,3 +54,4 @@ assets/env/local.json
 lib/ui/shared/l10n/generated
 old_android_app_reference
 .context
+pubspec_overrides.yaml

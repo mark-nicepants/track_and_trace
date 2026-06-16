@@ -373,6 +373,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.0"
+  http_interceptor:
+    dependency: transitive
+    description:
+      name: http_interceptor
+      sha256: bf7044578984ee9a0a90bc7c03fc08252912bff56b34cb9437e1a5696ca1271b
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   http_mock_adapter:
     dependency: "direct dev"
     description:
@@ -509,6 +517,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.13.0"
+  mcp_dart:
+    dependency: transitive
+    description:
+      name: mcp_dart
+      sha256: "5fda27b4c775fc25601facf76902bf13bd832f1f67dce854c87b16b173f079d0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.1"
   meta:
     dependency: transitive
     description:
@@ -1042,6 +1058,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.3"
+  turbo_bridge:
+    dependency: "direct dev"
+    description:
+      name: turbo_bridge
+      sha256: "136fcd09519fec1fa30c70dceb11066caf9bf9a3cad5721e1de1fe3415998859"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
+  turbo_bridge_client:
+    dependency: transitive
+    description:
+      name: turbo_bridge_client
+      sha256: "8bac97308bda17e19d8b245af1c4ea747adbfa7de74a7e14998fb78cf24fa557"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
+  turbo_bridge_mcp:
+    dependency: "direct dev"
+    description:
+      name: turbo_bridge_mcp
+      sha256: "1bee77acbeb1b3379bf21967ac17507b5197f5cda0beb5ff815ce8eafdbdc50e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
   typed_data:
     dependency: transitive
     description:

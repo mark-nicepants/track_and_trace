@@ -1,6 +1,6 @@
 import 'package:app/data/http/auth_interceptor.dart';
-import 'package:app/data/http/http_logging_interceptor.dart';
 import 'package:app/shared/config/app_env.dart';
+import 'package:app/shared/turbo_bridge.dart';
 import 'package:dio/dio.dart';
 
 Dio buildDio(AppEnv env) {
@@ -14,7 +14,8 @@ Dio buildDio(AppEnv env) {
   );
   dio.interceptors.add(AuthInterceptor(env.apiKey));
   if (env.enableLogging) {
-    dio.interceptors.add(HttpLoggingInterceptor());
+    dio.interceptors.add(turboBridgeNetworkInterceptor);
   }
+
   return dio;
 }

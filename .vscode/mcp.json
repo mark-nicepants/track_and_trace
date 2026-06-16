@@ -1,0 +1,13 @@
+{
+    "servers": {
+        "turbo_bridge_mcp": {
+            "command": "fvm",
+            "args": [
+                "flutter",
+                "pub",
+                "run",
+                "turbo_bridge_mcp"
+            ]
+        }
+    }
+}

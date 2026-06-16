@@ -1,3 +1,4 @@
+import 'package:app/shared/turbo_bridge.dart';
 import 'package:app/ui/features/crash/crash_detected_provider.dart';
 import 'package:app/ui/features/crash/crash_page.dart';
 import 'package:app/ui/features/main/main_page.dart';
@@ -24,6 +25,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: MainPage.path,
     refreshListenable: refresh,
     routes: appRoutes,
+    observers: [?kReleaseMode ? null : turboBridgeNavigationObserver].nonNulls.toList(),
     redirect: (context, state) {
       if (state.matchedLocation != MainPage.path) return null;
 

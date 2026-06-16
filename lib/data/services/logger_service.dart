@@ -1,5 +1,6 @@
 import 'package:app/data/services/rotating_file_log_writer.dart';
 import 'package:app/shared/contracts/i_logger.dart';
+import 'package:app/shared/turbo_bridge.dart';
 import 'package:logger/logger.dart' as pkg;
 
 /// Production [ILogger] that mirrors every line to:
@@ -29,25 +30,38 @@ class LoggerService implements ILogger {
 
   @override
   void debug(String message, [Object? error, StackTrace? stackTrace]) {
-    if (consoleEnabled) _console.d(message, error: error, stackTrace: stackTrace);
+    if (consoleEnabled) {
+      turboBridge?.logs.debug(message);
+      _console.d(message, error: error, stackTrace: stackTrace);
+    }
+
     _appendFile('D', message, error, stackTrace);
   }
 
   @override
   void info(String message, [Object? error, StackTrace? stackTrace]) {
-    if (consoleEnabled) _console.i(message, error: error, stackTrace: stackTrace);
+    if (consoleEnabled) {
+      turboBridge?.logs.info(message);
+      _console.i(message, error: error, stackTrace: stackTrace);
+    }
     _appendFile('I', message, error, stackTrace);
   }
 
   @override
   void warning(String message, [Object? error, StackTrace? stackTrace]) {
-    if (consoleEnabled) _console.w(message, error: error, stackTrace: stackTrace);
+    if (consoleEnabled) {
+      turboBridge?.logs.warn(message, error: error, stackTrace: stackTrace);
+      _console.w(message, error: error, stackTrace: stackTrace);
+    }
     _appendFile('W', message, error, stackTrace);
   }
 
   @override
   void error(String message, [Object? error, StackTrace? stackTrace]) {
-    if (consoleEnabled) _console.e(message, error: error, stackTrace: stackTrace);
+    if (consoleEnabled) {
+      turboBridge?.logs.error(message, error: error, stackTrace: stackTrace);
+      _console.e(message, error: error, stackTrace: stackTrace);
+    }
     _appendFile('E', message, error, stackTrace);
   }
 

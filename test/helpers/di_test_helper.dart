@@ -1,13 +1,5 @@
 import 'package:app/data/repositories/position_queue_repository.dart';
 import 'package:app/data/repositories/track_and_trace_repository.dart';
-import 'fakes/in_memory_connectivity_service.dart';
-import 'fakes/in_memory_foreground_tracking_service.dart';
-import 'fakes/in_memory_location_client.dart';
-import 'fakes/in_memory_permission_service.dart';
-import 'fakes/in_memory_prediction_service.dart';
-import 'fakes/in_memory_preference_service.dart';
-import 'fakes/in_memory_sending_service.dart';
-import 'fakes/noop_logger.dart';
 import 'package:app/shared/clock.dart';
 import 'package:app/shared/config/app_env.dart';
 import 'package:app/shared/contracts/i_connectivity_service.dart';
@@ -22,6 +14,15 @@ import 'package:app/shared/contracts/i_sending_service.dart';
 import 'package:app/shared/inject.dart';
 import 'package:dio/dio.dart';
 import 'package:sqflite/sqflite.dart';
+
+import 'fakes/in_memory_connectivity_service.dart';
+import 'fakes/in_memory_foreground_tracking_service.dart';
+import 'fakes/in_memory_location_client.dart';
+import 'fakes/in_memory_permission_service.dart';
+import 'fakes/in_memory_prediction_service.dart';
+import 'fakes/in_memory_preference_service.dart';
+import 'fakes/in_memory_sending_service.dart';
+import 'fakes/noop_logger.dart';
 
 /// Sets up a clean GetIt scope for a test. Pass overrides to swap in mocks.
 Future<void> setupTestDi({
@@ -43,7 +44,7 @@ Future<void> setupTestDi({
   await injector.reset();
   injector.registerSingleton<IPreferenceService>(prefs ?? InMemoryPreferenceService());
   injector.registerSingleton<ILogger>(logger ?? const NoopLogger());
-  injector.registerSingleton<AppEnv>(env ?? AppEnv('test', 'http://test.local', false, '', ''));
+  injector.registerSingleton<AppEnv>(env ?? AppEnv('test', 'http://test.local', false, '', '', ''));
   injector.registerSingleton<Dio>(dio ?? Dio());
   injector.registerSingleton<IsoClock>(clock ?? const IsoClock());
   injector.registerSingleton<IPermissionService>(permissions ?? InMemoryPermissionService());

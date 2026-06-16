@@ -1,6 +1,7 @@
 {
   "apiBaseUrl": "https://track-and-trace-prd-283621971711.europe-west4.run.app",
   "enableLogging": false,
-  "newRelicToken": "eu01xxad8a2247a3786d47f105154ab1a4c7cc9143-NRMA",
-  "apiKey": ""
+  "apiKey": "",
+  "crashLogForwardingUrl": "",
+  "crashLogApiKey": ""
 }

@@ -203,13 +203,22 @@ class TrackingPage extends HookConsumerWidget {
   }
 
   Widget _stopButton(BuildContext context, TrackingState tracking, TrackingNotifier notifier) {
+    // Determine button state and action based on tracking status
+    final isStarting = !tracking.isTracking && !tracking.stopping;
+    final labelKey = tracking.stopping
+        ? L10n.translate.trackingStoppingRun
+        : tracking.isTracking
+        ? L10n.translate.trackingStop
+        : L10n.translate.trackingStart;
+
     return FilledButton(
-      key: const Key('stopButton'),
-      onPressed: tracking.stopping ? null : () => unawaited(_confirmStop(context, notifier)),
-      child: Text(
-        tracking.stopping ? L10n.translate.trackingStoppingRun : L10n.translate.trackingStop,
-        style: const TextStyle(fontSize: 22),
-      ),
+      key: Key(isStarting ? 'startButton' : 'stopButton'),
+      onPressed: tracking.stopping
+          ? null
+          : isStarting
+          ? () => unawaited(notifier.start())
+          : () => unawaited(_confirmStop(context, notifier)),
+      child: Text(labelKey, style: const TextStyle(fontSize: 22)),
     );
   }
 
