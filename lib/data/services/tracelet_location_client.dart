@@ -30,11 +30,10 @@ class TraceletLocationClient implements ILocationClient {
     Future<void> startNative() async {
       await tl.Tracelet.ready(
         const tl.Config(
-          geo: tl.GeoConfig(
-            distanceFilter: 0,
-            desiredAccuracy: tl.DesiredAccuracy.high,
-            locationAuthorizationRequest: tl.LocationAuthorizationRequest.always,
-          ),
+          geo: tl.GeoConfig(distanceFilter: 0, desiredAccuracy: tl.DesiredAccuracy.high),
+          // tracelet 3.x moved location-authorization configuration out of
+          // GeoConfig and into the iOS-specific config block.
+          ios: tl.IosConfig(locationAuthorizationRequest: tl.LocationAuthorizationRequest.always),
         ),
       );
       await tl.Tracelet.start();

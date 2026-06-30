@@ -14,6 +14,7 @@ Future<T> guardDio<T>(Future<T> Function() request) async {
       case dio.DioExceptionType.connectionTimeout:
       case dio.DioExceptionType.sendTimeout:
       case dio.DioExceptionType.receiveTimeout:
+      case dio.DioExceptionType.transformTimeout:
         throw const TimeoutException();
       case dio.DioExceptionType.badResponse:
         throw HttpException(e.response?.statusCode ?? 0, e.response?.data);

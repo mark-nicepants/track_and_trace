@@ -30,18 +30,18 @@ dependencies:
   path_provider: ^2.1.5
 
   # Platform / device
-  tracelet: ^1.2.0
+  tracelet: ^3.5.3
   permission_handler: ^12.0.0
-  connectivity_plus: ^6.1.0
+  connectivity_plus: ^7.2.0
   wakelock_plus: ^1.2.8
   flutter_foreground_task: ^9.1.0
-  package_info_plus: ^8.1.1
+  package_info_plus: ^10.2.0
 
   # Utilities
   equatable: ^2.0.5
   logger: ^2.4.0
   archive: ^4.0.2
-  share_plus: ^12.0.2
+  share_plus: ^13.2.0
 
 dev_dependencies:
   flutter_test:
@@ -59,9 +59,7 @@ flutter:
   uses-material-design: true
   generate: true
   assets:
-    - assets/env/dev.json
-    - assets/env/staging.json
-    - assets/env/prod.json
+    - assets/env/
 
 flutter_launcher_icons:
   android: "ic_launcher"

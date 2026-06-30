@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run app (dev)",
+            "name": "Run app (local)",
             "request": "launch",
             "type": "dart",
             "program": "lib/main.dart",
             "args": [
                 "--dart-define",
-                "ENV=dev"
+                "ENV=local"
             ],
             "toolArgs": ["--enable-experiment=primary-constructors"],
         },
