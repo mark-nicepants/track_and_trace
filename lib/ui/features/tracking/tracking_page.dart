@@ -153,15 +153,15 @@ class TrackingPage extends HookConsumerWidget {
                 }
               },
               itemBuilder: (_) => [
-                // PopupMenuItem<_TrackingMenuAction>(
-                //   key: const Key('trackingMenuUpdateVehicle'),
-                //   value: _TrackingMenuAction.updateVehicle,
-                //   // Locked while a run is active: the active run already
-                //   // captured its vehicle/capacity, so editing mid-run would
-                //   // be misleading. The operator stops first, then edits.
-                //   enabled: !tracking.isTracking,
-                //   child: Text(L10n.translate.trackingMenuUpdateVehicle),
-                // ),
+                PopupMenuItem<_TrackingMenuAction>(
+                  key: const Key('trackingMenuUpdateVehicle'),
+                  value: _TrackingMenuAction.updateVehicle,
+                  // Locked while a run is active: the active run already
+                  // captured its vehicle/capacity, so editing mid-run would
+                  // be misleading. The operator stops first, then edits.
+                  enabled: !tracking.isTracking,
+                  child: Text(L10n.translate.trackingMenuUpdateVehicle),
+                ),
                 PopupMenuItem<_TrackingMenuAction>(
                   key: const Key('trackingMenuOpenLogs'),
                   value: _TrackingMenuAction.openLogConsole,
