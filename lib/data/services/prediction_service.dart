@@ -69,10 +69,10 @@ class PredictionService implements IPredictionService {
       try {
         final runId = _runId;
         if (runId == null) break;
-        final request = GetStatusRequestDto(runId, _clock.nowIso(), _latestActivity ?? '');
+        final request = GetStatusRequestDto(runId, _clock.nowIso(), _latestActivity);
         final response = await _api.getStatus(request);
         final activity = response.activity;
-        if (_isKnownActivity(activity) && activity != _latestActivity) {
+        if (activity != null && _isKnownActivity(activity) && activity != _latestActivity) {
           _latestActivity = activity;
           _predictionsController.add(activity);
         }

@@ -7,6 +7,8 @@ import 'package:app/ui/features/setup_permissions/permissions_state.dart';
 import 'package:app/ui/shared/error_messages.dart';
 import 'package:app/ui/shared/l10n/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show SystemNavigator;
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -22,6 +24,11 @@ class SetupPermissionsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // The consent/disclosure screen gates the whole flow: until the user
+    // accepts it we never request OS permissions. Kept in-memory (not
+    // persisted) so it re-shows on every cold start while permissions are
+    // still missing — mirrors the Android reference's PermissionScreen.
+    final consentAccepted = useState(false);
     final asyncState = ref.watch(permissionsProvider);
     final notifier = ref.read(permissionsProvider.notifier);
 
@@ -35,14 +42,19 @@ class SetupPermissionsPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(L10n.translate.permissionsTitle)),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: asyncState.when(
-            data: (state) => _stepView(context, state, notifier),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(child: Text(errorMessage(e))),
-          ),
-        ),
+        child: consentAccepted.value
+            ? Padding(
+                padding: const EdgeInsets.all(24),
+                child: asyncState.when(
+                  data: (state) => _stepView(context, state, notifier),
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => Center(child: Text(errorMessage(e))),
+                ),
+              )
+            : _ConsentView(
+                onAccept: () => consentAccepted.value = true,
+                onClose: () => unawaited(SystemNavigator.pop()),
+              ),
       ),
     );
   }
@@ -61,7 +73,7 @@ class SetupPermissionsPage extends HookConsumerWidget {
       return _viewFor(
         stepKey: 'locationAlways',
         status: state.locationAlways,
-        rationale: L10n.translate.permissionsLocationRationale,
+        rationale: L10n.translate.permissionsLocationRationaleAlways,
         onAccept: notifier.requestLocationAlways,
         onOpenSettings: notifier.openSettings,
       );
@@ -89,6 +101,50 @@ class SetupPermissionsPage extends HookConsumerWidget {
       return _PermanentlyDeniedView(key: ValueKey('$stepKey.permanent'), onOpenSettings: onOpenSettings);
     }
     return _RationaleView(key: ValueKey('$stepKey.rationale'), rationale: rationale, onAccept: onAccept);
+  }
+}
+
+/// The consent/disclosure screen shown before any OS permission is
+/// requested. Scrollable Dutch disclosure text with a "Sluiten" (closes
+/// the app) and "Accepteer" (proceeds to the permission steps) button.
+/// Mirrors the Android reference's PermissionScreen.
+class _ConsentView extends StatelessWidget {
+  const _ConsentView({required this.onAccept, required this.onClose});
+
+  final VoidCallback onAccept;
+  final VoidCallback onClose;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Text(L10n.translate.permissionsConsentBody, style: Theme.of(context).textTheme.bodyLarge),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                key: const Key('consentClose'),
+                onPressed: onClose,
+                child: Text(L10n.translate.permissionsClose),
+              ),
+              const SizedBox(width: 16),
+              ElevatedButton(
+                key: const Key('consentAccept'),
+                onPressed: onAccept,
+                child: Text(L10n.translate.permissionsAccept),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 

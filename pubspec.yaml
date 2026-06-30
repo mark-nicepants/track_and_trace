@@ -41,6 +41,7 @@ dependencies:
   equatable: ^2.0.5
   logger: ^2.4.0
   archive: ^4.0.2
+  share_plus: ^12.0.2
 
 dev_dependencies:
   flutter_test:

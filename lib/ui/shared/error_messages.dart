@@ -26,3 +26,19 @@ String errorMessage(Object error) {
     _ => L10n.translate.errorGeneric,
   };
 }
+
+/// Extracts the HTTP status code carried by an HTTP-originated exception,
+/// or `null` when the error has no associated status (network/timeout/
+/// parse/unknown failures). Covers both the raw data-layer [HttpException]
+/// and the domain-level subtypes that [mapHttpStatusToDomain] derives from
+/// a status code.
+int? httpStatusCodeOf(Object error) {
+  return switch (error) {
+    HttpException(:final statusCode) => statusCode,
+    ServerException(:final statusCode) => statusCode,
+    UnauthorizedException(:final statusCode) => statusCode,
+    NotFoundException(:final statusCode) => statusCode,
+    ConflictException(:final statusCode) => statusCode,
+    _ => null,
+  };
+}

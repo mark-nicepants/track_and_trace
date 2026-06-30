@@ -6,6 +6,7 @@ import 'package:app/shared/contracts/i_connectivity_service.dart';
 import 'package:app/shared/contracts/i_crash_report_service.dart';
 import 'package:app/shared/contracts/i_foreground_tracking_service.dart';
 import 'package:app/shared/contracts/i_location_client.dart';
+import 'package:app/shared/contracts/i_log_export_service.dart';
 import 'package:app/shared/contracts/i_logger.dart';
 import 'package:app/shared/contracts/i_permission_service.dart';
 import 'package:app/shared/contracts/i_prediction_service.dart';
@@ -38,6 +39,7 @@ Future<void> setupTestDi({
   ISendingService? sending,
   IPredictionService? prediction,
   ICrashReportService? crashReports,
+  ILogExportService? logExport,
   TrackAndTraceRepository? trackAndTraceRepository,
   Database? database,
 }) async {
@@ -54,6 +56,7 @@ Future<void> setupTestDi({
   injector.registerSingleton<ISendingService>(sending ?? InMemorySendingService());
   injector.registerSingleton<IPredictionService>(prediction ?? InMemoryPredictionService());
   injector.registerSingleton<ICrashReportService>(crashReports ?? _InMemoryCrashReports());
+  injector.registerSingleton<ILogExportService>(logExport ?? _InMemoryLogExport());
   if (trackAndTraceRepository != null) {
     injector.registerSingleton<TrackAndTraceRepository>(trackAndTraceRepository);
   }
@@ -73,4 +76,12 @@ class _InMemoryCrashReports implements ICrashReportService {
 
   @override
   Future<bool> uploadLogs() async => result;
+}
+
+class _InMemoryLogExport implements ILogExportService {
+  /// Path returned by [exportLogArchive]; `null` mimics "no logs on disk".
+  String? archivePath;
+
+  @override
+  Future<String?> exportLogArchive() async => archivePath;
 }

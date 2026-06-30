@@ -41,9 +41,9 @@ abstract class StreamUseCase<R> {
 /// status carries no domain-specific meaning (in which case the caller
 /// should let the original [HttpException] propagate).
 DomainException? mapHttpStatusToDomain(int statusCode) {
-  if (statusCode == 401 || statusCode == 403) return const UnauthorizedException();
-  if (statusCode == 404) return const NotFoundException();
-  if (statusCode == 409) return const ConflictException();
+  if (statusCode == 401 || statusCode == 403) return UnauthorizedException(statusCode);
+  if (statusCode == 404) return NotFoundException(statusCode);
+  if (statusCode == 409) return ConflictException(statusCode);
   if (statusCode >= 500 && statusCode < 600) return ServerException(statusCode);
   return null;
 }

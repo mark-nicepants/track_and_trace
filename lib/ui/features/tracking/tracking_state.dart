@@ -14,6 +14,12 @@ import 'package:equatable/equatable.dart';
 /// the dump dialog is shown for a DUMPING transition, cleared when the
 /// state machine transitions out of DUMPING. US-008 ships the guard
 /// itself; US-009 wires the dialog to it.
+///
+/// [machineTypeName] and [capacity] mirror the operator's saved
+/// vehicle/capacity (read from prefs on build, refreshed after an in-place
+/// edit). They drive the settings label in the AppBar area and are
+/// independent of the run lifecycle — editing them mid-run changes only the
+/// *next* run, never the active one.
 class TrackingState(
   final String? runId,
   final ActivityState? predictedState,
@@ -21,8 +27,11 @@ class TrackingState(
   final NearestDepot? nearestDepot,
   final bool shownDumpsizeDialogThisDump,
   final bool stopping,
+  final Object? startError,
+  final String? machineTypeName,
+  final num? capacity,
 ) extends Equatable {
-  static final TrackingState initial = TrackingState(null, null, null, null, false, false);
+  static final TrackingState initial = TrackingState(null, null, null, null, false, false, null, null, null);
 
   bool get isTracking => runId != null;
 
@@ -39,6 +48,10 @@ class TrackingState(
     bool clearNearestDepot = false,
     bool? shownDumpsizeDialogThisDump,
     bool? stopping,
+    Object? startError,
+    bool clearStartError = false,
+    String? machineTypeName,
+    num? capacity,
   }) => TrackingState(
     clearRunId ? null : (runId ?? this.runId),
     clearPredictedState ? null : (predictedState ?? this.predictedState),
@@ -46,6 +59,9 @@ class TrackingState(
     clearNearestDepot ? null : (nearestDepot ?? this.nearestDepot),
     shownDumpsizeDialogThisDump ?? this.shownDumpsizeDialogThisDump,
     stopping ?? this.stopping,
+    clearStartError ? null : (startError ?? this.startError),
+    machineTypeName ?? this.machineTypeName,
+    capacity ?? this.capacity,
   );
 
   @override
@@ -56,5 +72,8 @@ class TrackingState(
     nearestDepot,
     shownDumpsizeDialogThisDump,
     stopping,
+    startError,
+    machineTypeName,
+    capacity,
   ];
 }

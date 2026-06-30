@@ -24,14 +24,36 @@ Widget _harness() {
   );
 }
 
+/// The consent/disclosure screen gates the flow. Accept it so the
+/// underlying per-permission step view becomes visible.
+Future<void> _acceptConsent(WidgetTester tester) async {
+  await tester.tap(find.byKey(const Key('consentAccept')));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   tearDown(tearDownTestDi);
+
+  testWidgets('shows the consent disclosure first before any permission step', (tester) async {
+    await setupTestDi(prefs: InMemoryPreferenceService(), permissions: InMemoryPermissionService());
+
+    await tester.pumpWidget(_harness());
+    await tester.pumpAndSettle();
+
+    expect(find.text('Toestemming'), findsOneWidget);
+    expect(find.textContaining('Geachte gebruiker'), findsOneWidget);
+    expect(find.byKey(const Key('consentClose')), findsOneWidget);
+    expect(find.byKey(const Key('consentAccept')), findsOneWidget);
+    // The per-permission rationale is NOT shown yet.
+    expect(find.text('Deze app heeft uw locatie nodig om de locaties bij te houden.'), findsNothing);
+  });
 
   testWidgets('shows location rationale first when nothing granted', (tester) async {
     await setupTestDi(prefs: InMemoryPreferenceService(), permissions: InMemoryPermissionService());
 
     await tester.pumpWidget(_harness());
     await tester.pumpAndSettle();
+    await _acceptConsent(tester);
 
     expect(find.text('Toestemming'), findsOneWidget);
     expect(find.text('Deze app heeft uw locatie nodig om de locaties bij te houden.'), findsOneWidget);
@@ -49,6 +71,7 @@ void main() {
 
     await tester.pumpWidget(_harness());
     await tester.pumpAndSettle();
+    await _acceptConsent(tester);
 
     expect(find.text('Deze app heeft notificaties nodig om te laten zien dat de app bezig is.'), findsOneWidget);
   });
@@ -59,6 +82,7 @@ void main() {
 
     await tester.pumpWidget(_harness());
     await tester.pumpAndSettle();
+    await _acceptConsent(tester);
 
     expect(find.text('Het lijkt erop dat u de locatie toestemming permanent hebt afgewezen…'), findsOneWidget);
     expect(find.text('Open instellingen'), findsOneWidget);
@@ -73,14 +97,21 @@ void main() {
 
     await tester.pumpWidget(_harness());
     await tester.pumpAndSettle();
+    await _acceptConsent(tester);
 
     // Step 1: location-when-in-use rationale → Accept grants it.
     expect(find.text('Deze app heeft uw locatie nodig om de locaties bij te houden.'), findsOneWidget);
     await tester.tap(find.text('Accepteer'));
     await tester.pumpAndSettle();
 
-    // Step 2: still on the location rationale, this time for location-always.
-    expect(find.text('Deze app heeft uw locatie nodig om de locaties bij te houden.'), findsOneWidget);
+    // Step 2: the background ("always") location rationale.
+    expect(
+      find.text(
+        'Deze app heeft op de achtergrond toegang tot uw locatie nodig om ritten bij te houden, '
+        'ook wanneer de app niet geopend is.',
+      ),
+      findsOneWidget,
+    );
     await tester.tap(find.text('Accepteer'));
     await tester.pumpAndSettle();
 

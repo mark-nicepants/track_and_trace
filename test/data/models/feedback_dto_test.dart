@@ -8,11 +8,11 @@ void main() {
     final dto = FeedbackDto.fromJson(json);
     expect(dto.runId, 'run-1');
     expect(dto.time, json['time']);
-    expect(dto.name, 'LOADING');
+    expect(dto.activity, 'LOADING');
     expect(dto.toJson(), json);
   });
 
-  test('toJson omits name when null', () {
+  test('toJson omits activity when null', () {
     final dto = FeedbackDto('run-1', '2026-06-09T00:00:00.000', null);
     expect(dto.toJson().containsKey('name'), isFalse);
   });

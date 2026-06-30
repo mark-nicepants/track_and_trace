@@ -5,10 +5,12 @@ import 'package:app/data/repositories/position_queue_repository.dart';
 import 'package:app/data/repositories/track_and_trace_repository.dart';
 import 'package:app/domain/entities/activity_state.dart';
 import 'package:app/shared/contracts/i_location_client.dart';
+import 'package:app/shared/contracts/i_log_export_service.dart';
 import 'package:app/ui/features/setup/setup_keys.dart';
 import 'package:app/ui/features/tracking/tracking_keys.dart';
 import 'package:app/ui/features/tracking/tracking_notifier.dart';
 import 'package:app/ui/features/tracking/tracking_state.dart';
+import 'package:app/ui/shared/error_messages.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -124,6 +126,27 @@ void main() {
 
     expect(container.read(trackingProvider), TrackingState.initial);
     expect(foreground.isRunning, isFalse);
+  });
+
+  test('start() surfaces a /create-run failure as startError and rolls back EXITED_CORRECTLY', () async {
+    await seedSetup();
+    adapter.onPost('/create-run', (server) => server.reply(503, {'error': 'down'}), data: Matchers.any);
+    final container = makeContainer();
+    final notifier = container.read(trackingProvider.notifier);
+
+    await notifier.start();
+
+    final state = container.read(trackingProvider);
+    expect(state.runId, isNull);
+    expect(state.isTracking, isFalse);
+    expect(state.startError, isNotNull);
+    expect(httpStatusCodeOf(state.startError!), 503);
+    expect(await prefs.readString(exitedCorrectlyKey), 'true');
+    expect(foreground.isRunning, isFalse);
+    expect(sending.isRunning, isFalse);
+
+    notifier.clearStartError();
+    expect(container.read(trackingProvider).startError, isNull);
   });
 
   test('emitted location fixes land in the queue tagged with the runId', () async {
@@ -302,4 +325,56 @@ void main() {
     notifier.selectFeedback(ActivityState.driving);
     expect(container.read(trackingProvider), TrackingState.initial);
   });
+
+  test('build() exposes the saved vehicle name + capacity for the settings label', () async {
+    await seedSetup(capacity: 12.5); // seedSetup persists displayName 'Loader'
+    final container = makeContainer();
+    container.read(trackingProvider.notifier); // triggers build() + async settings load
+
+    await Future<void>.delayed(const Duration(milliseconds: 10));
+
+    final state = container.read(trackingProvider);
+    expect(state.machineTypeName, 'Loader');
+    expect(state.capacity, 12.5);
+  });
+
+  test('refreshSettings() reloads the label after the saved vehicle changes', () async {
+    await seedSetup(capacity: 10); // displayName 'Loader'
+    final container = makeContainer();
+    final notifier = container.read(trackingProvider.notifier);
+    await Future<void>.delayed(const Duration(milliseconds: 10));
+    expect(container.read(trackingProvider).machineTypeName, 'Loader');
+
+    // Simulate the edit dialog persisting a new vehicle + capacity.
+    await prefs.writeString(machineTypeKey, jsonEncode({'id': 'mt-2', 'displayName': 'Truck'}));
+    await prefs.writeString(machineCapacityKey, '7.5');
+    await notifier.refreshSettings();
+
+    final state = container.read(trackingProvider);
+    expect(state.machineTypeName, 'Truck');
+    expect(state.capacity, 7.5);
+  });
+
+  test('prepareLogArchive() delegates to the log export service', () async {
+    await setupTestDi(
+      prefs: prefs,
+      dio: dio,
+      database: db,
+      logExport: _FakeLogExport('/data/logs/sharedLogs.zip'),
+      trackAndTraceRepository: TrackAndTraceRepository(),
+    );
+    final container = makeContainer();
+    final notifier = container.read(trackingProvider.notifier);
+
+    expect(await notifier.prepareLogArchive(), '/data/logs/sharedLogs.zip');
+  });
+}
+
+class _FakeLogExport implements ILogExportService {
+  _FakeLogExport(this.path);
+
+  final String? path;
+
+  @override
+  Future<String?> exportLogArchive() async => path;
 }

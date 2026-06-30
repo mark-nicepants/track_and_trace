@@ -9,6 +9,7 @@ import 'package:app/domain/use_cases/start_run.dart';
 import 'package:app/domain/use_cases/stop_run.dart';
 import 'package:app/shared/contracts/i_foreground_tracking_service.dart';
 import 'package:app/shared/contracts/i_location_client.dart';
+import 'package:app/shared/contracts/i_log_export_service.dart';
 import 'package:app/shared/contracts/i_prediction_service.dart';
 import 'package:app/shared/contracts/i_preference_service.dart';
 import 'package:app/shared/contracts/i_sending_service.dart';
@@ -47,6 +48,11 @@ class TrackingNotifier extends Notifier<TrackingState> {
   IForegroundTrackingService get _fg => inject();
   ISendingService get _sender => inject();
   IPredictionService get _prediction => inject();
+  ILogExportService get _logExport => inject();
+
+  /// Set in [ref.onDispose] so the async [_loadSettings] read can't push a
+  /// `state =` after the provider is torn down (which would throw).
+  bool _disposed = false;
 
   /// Polling cadence for `/get-nearest-depot` while feedbackState is
   /// DRIVING. Production = 5 s (per FEATURES.md §6.3). Overridable for
@@ -55,13 +61,18 @@ class TrackingNotifier extends Notifier<TrackingState> {
 
   @override
   TrackingState build() {
+    _disposed = false;
     ref.onDispose(() {
+      _disposed = true;
       unawaited(_locationSub?.cancel());
       _locationSub = null;
       unawaited(_predictionSub?.cancel());
       _predictionSub = null;
       _stopDepotPolling();
     });
+    // Surface the saved vehicle/capacity for the settings label as soon as
+    // the screen mounts, before any run is started.
+    unawaited(_loadSettings());
     return TrackingState.initial;
   }
 
@@ -83,10 +94,12 @@ class TrackingNotifier extends Notifier<TrackingState> {
     final String runId;
     try {
       runId = await StartRun(machineTypeId, capacity).call();
-    } catch (_) {
+    } catch (e) {
       // Roll back the EXITED_CORRECTLY flag so a future, successful start
-      // can re-prime crash detection.
+      // can re-prime crash detection, and surface the failure so the
+      // screen can show a dialog with the HTTP status code.
       await _prefs.writeString(exitedCorrectlyKey, 'true');
+      state = state.copyWith(startError: e);
       return;
     }
 
@@ -140,6 +153,44 @@ class TrackingNotifier extends Notifier<TrackingState> {
 
     state = TrackingState.initial;
     return success;
+  }
+
+  /// Clears the create-run failure once the screen has surfaced it, so a
+  /// retry can raise a fresh error.
+  void clearStartError() {
+    if (state.startError != null) state = state.copyWith(clearStartError: true);
+  }
+
+  /// Reloads the saved vehicle/capacity into [TrackingState] after an
+  /// in-place edit so the settings label reflects the new values.
+  Future<void> refreshSettings() => _loadSettings();
+
+  /// Zips the on-disk log files into an archive and returns its path for
+  /// the platform share sheet, or `null` when there are no logs yet.
+  Future<String?> prepareLogArchive() => _logExport.exportLogArchive();
+
+  Future<void> _loadSettings() async {
+    final (name, capacity) = await _readSavedSettings();
+    if (_disposed) return;
+    if (name == null && capacity == null) return;
+    state = state.copyWith(machineTypeName: name, capacity: capacity);
+  }
+
+  Future<(String?, num?)> _readSavedSettings() async {
+    final typeRaw = await _prefs.readString(machineTypeKey);
+    final capacityRaw = await _prefs.readString(machineCapacityKey);
+    String? name;
+    if (typeRaw != null && typeRaw.isNotEmpty) {
+      try {
+        final json = jsonDecode(typeRaw) as Map<String, Object?>;
+        final displayName = json['displayName'];
+        if (displayName is String) name = displayName;
+      } catch (_) {
+        // Ignore malformed JSON — the label simply stays empty.
+      }
+    }
+    final capacity = capacityRaw == null ? null : num.tryParse(capacityRaw);
+    return (name, capacity);
   }
 
   /// US-009 wiring hook: once the dump-size dialog is actually displayed,

@@ -18,6 +18,7 @@
     "placeholders": { "env": { "type": "String" } }
   },
   "commonOk": "OK",
+  "commonCancel": "Annuleren",
 
   "permissionsTitle": "Toestemming",
   "@permissionsTitle": {
@@ -26,6 +27,10 @@
   "permissionsLocationRationale": "Deze app heeft uw locatie nodig om de locaties bij te houden.",
   "@permissionsLocationRationale": {
     "description": "Location-permission rationale. Dutch verbatim per FEATURES.md §12."
+  },
+  "permissionsLocationRationaleAlways": "Deze app heeft op de achtergrond toegang tot uw locatie nodig om ritten bij te houden, ook wanneer de app niet geopend is.",
+  "@permissionsLocationRationaleAlways": {
+    "description": "Background (\"always\") location-permission rationale, shown after the when-in-use step. Dutch verbatim per FEATURES.md §12."
   },
   "permissionsNotificationRationale": "Deze app heeft notificaties nodig om te laten zien dat de app bezig is.",
   "@permissionsNotificationRationale": {
@@ -38,6 +43,10 @@
   "permissionsAccept": "Accepteer",
   "permissionsClose": "Sluiten",
   "permissionsOpenSettings": "Open instellingen",
+  "permissionsConsentBody": "Geachte gebruiker,\n\nHierbij informeren wij u over het gebruik van onze Track&Trace-app (T&T-app) voor het monitoren van de maatregel voorkeur kleine Kringloop (vKK).\n\nDe T&T-app verzamelt specifieke gegevens, waaronder uw locatie, snelheid, status (maaien, rijden, storten of anders) en de hoeveelheid gestort maaisel. Het verzamelen van deze informatie begint wanneer u op de 'start'-knop drukt en eindigt wanneer u op de 'pauze'- of 'stop'-knop drukt.\n\nWe willen benadrukken dat uw privacy en gegevensbeveiliging onze hoogste prioriteit hebben. De locatiegegevens die worden verzameld, worden uitsluitend gebruikt voor het monitoren van de vKK-maatregel. We zullen deze gegevens niet voor andere doeleinden gebruiken en zullen ze niet delen met derden, tenzij dit wettelijk vereist is.\n\nU heeft te allen tijde de mogelijkheid om het gebruik van locatiegegevens uit te schakelen via de instellingen van de app. Houd er echter rekening mee dat de app dan niet meer naar behoren zal functioneren en niet in staat zal zijn om de vKK-maatregel effectief te monitoren.\n\nDoor deze toestemmingsverklaring te accepteren, geeft u ons toestemming om uw gegevens te gebruiken zoals beschreven in deze verklaring.\n\nMet vriendelijke groet,\n\nWaterschap Vallei en Veluwe",
+  "@permissionsConsentBody": {
+    "description": "Consent/disclosure body shown on the permissions screen before requesting OS permissions. Dutch verbatim, mirrors the Android reference's ask_permission_screen_text."
+  },
 
   "setupMachineTypeLabel": "Type kipper/kiepwagen",
   "@setupMachineTypeLabel": {
@@ -126,6 +135,43 @@
   "trackingStoppingRun": "Aan het stoppen",
   "trackingStartingRun": "Aan het opstarten",
   "trackingClickStartToBegin": "Klik op Start om te beginnen",
+
+  "trackingMenuUpdateVehicle": "Voertuig & inhoud wijzigen",
+  "@trackingMenuUpdateVehicle": {
+    "description": "Tracking screen — AppBar overflow item that opens the vehicle/capacity edit dialog."
+  },
+  "trackingMenuShareLogs": "Logbestand delen",
+  "@trackingMenuShareLogs": {
+    "description": "Tracking screen — AppBar overflow item that shares the zipped log files via the OS share sheet."
+  },
+  "trackingSettingsTitle": "Voertuig & inhoud",
+  "@trackingSettingsTitle": {
+    "description": "Title of the in-place vehicle/capacity edit dialog opened from the tracking screen."
+  },
+  "trackingSettingsSave": "Opslaan",
+  "@trackingSettingsSave": {
+    "description": "Save button in the vehicle/capacity edit dialog."
+  },
+  "trackingVehicleSummary": "{vehicle} · {capacity} m³",
+  "@trackingVehicleSummary": {
+    "description": "Tracking screen — current saved vehicle + capacity label.",
+    "placeholders": {
+      "vehicle": { "type": "String", "example": "Kipper 12" },
+      "capacity": { "type": "String", "example": "12,5" }
+    }
+  },
+  "trackingVehicleNone": "Geen voertuig ingesteld",
+  "@trackingVehicleNone": {
+    "description": "Tracking screen — settings label fallback when no vehicle/capacity is saved yet."
+  },
+  "trackingShareLogsText": "Track & Trace logbestanden",
+  "@trackingShareLogsText": {
+    "description": "Accompanying text/subject when sharing the zipped logs."
+  },
+  "trackingNoLogsToShare": "Geen logbestanden om te delen.",
+  "@trackingNoLogsToShare": {
+    "description": "Snackbar shown when the operator taps Share logs but no log files exist yet."
+  },
 
   "dumpSizeTitle": "Hoeveel wordt er ongeveer gestort?",
   "@dumpSizeTitle": {
@@ -233,6 +279,11 @@
   "@errorHttp": {
     "description": "Fallback for an HttpException whose status code didn't map to a more specific DomainException.",
     "placeholders": { "statusCode": { "type": "int", "example": "418" } }
+  },
+  "errorCreateRunFailed": "Something went wrong, please try again later (HttpStatusCode = {statusCode})",
+  "@errorCreateRunFailed": {
+    "description": "Shown in a dialog when starting a run (/create-run) fails with an HTTP status code.",
+    "placeholders": { "statusCode": { "type": "int", "example": "503" } }
   },
   "errorParse": "Unexpected response from the server.",
   "@errorParse": {

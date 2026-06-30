@@ -8,12 +8,18 @@ import 'package:app/ui/features/tracking/no_network_dialog.dart';
 import 'package:app/ui/features/tracking/sending_providers.dart';
 import 'package:app/ui/features/tracking/tracking_notifier.dart';
 import 'package:app/ui/features/tracking/tracking_state.dart';
+import 'package:app/ui/features/tracking/vehicle_settings_dialog.dart';
+import 'package:app/ui/shared/error_messages.dart';
 import 'package:app/ui/shared/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+
+/// Actions surfaced in the tracking screen's AppBar overflow (3-dot) menu.
+enum _TrackingMenuAction { updateVehicle, shareLogs }
 
 /// The driver-facing tracking screen. Owns the entire run lifecycle via
 /// [TrackingNotifier]: mounting kicks off `/create-run` + LocationService +
@@ -103,16 +109,76 @@ class TrackingPage extends HookConsumerWidget {
       }
     });
 
+    // Surface a `/create-run` failure as a one-shot dialog with the HTTP
+    // status code. Fires only on the null → non-null transition; the error
+    // is cleared immediately so a retry can raise a fresh one.
+    ref.listen<TrackingState>(trackingProvider, (prev, next) {
+      final error = next.startError;
+      if (error == null || prev?.startError != null) return;
+      notifier.clearStartError();
+      final statusCode = httpStatusCodeOf(error);
+      final message = statusCode != null ? L10n.translate.errorCreateRunFailed(statusCode) : errorMessage(error);
+      unawaited(
+        showDialog<void>(
+          context: context,
+          builder: (dialogContext) => AlertDialog(
+            key: const Key('startRunErrorDialog'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                key: const Key('startRunErrorDismiss'),
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: Text(L10n.translate.commonOk),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
+
     return PopScope(
       canPop: false,
       child: Scaffold(
-        appBar: AppBar(title: Text(L10n.translate.trackingScreenTitle)),
+        appBar: AppBar(
+          title: Text(L10n.translate.trackingScreenTitle),
+          actions: [
+            PopupMenuButton<_TrackingMenuAction>(
+              key: const Key('trackingOverflowMenu'),
+              onSelected: (action) {
+                switch (action) {
+                  case _TrackingMenuAction.updateVehicle:
+                    unawaited(_onUpdateVehicle(context, ref));
+                  case _TrackingMenuAction.shareLogs:
+                    unawaited(_onShareLogs(context, ref));
+                }
+              },
+              itemBuilder: (_) => [
+                PopupMenuItem<_TrackingMenuAction>(
+                  key: const Key('trackingMenuUpdateVehicle'),
+                  value: _TrackingMenuAction.updateVehicle,
+                  // Locked while a run is active: the active run already
+                  // captured its vehicle/capacity, so editing mid-run would
+                  // be misleading. The operator stops first, then edits.
+                  enabled: !tracking.isTracking,
+                  child: Text(L10n.translate.trackingMenuUpdateVehicle),
+                ),
+                PopupMenuItem<_TrackingMenuAction>(
+                  key: const Key('trackingMenuShareLogs'),
+                  value: _TrackingMenuAction.shareLogs,
+                  child: Text(L10n.translate.trackingMenuShareLogs),
+                ),
+              ],
+            ),
+          ],
+        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                _settingsLabel(context, tracking),
+                const SizedBox(height: 12),
                 _statesView(context, tracking),
                 const SizedBox(height: 16),
                 _depotLabel(context, tracking),
@@ -125,6 +191,47 @@ class TrackingPage extends HookConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+
+  /// Opens the in-place vehicle/capacity editor and refreshes the settings
+  /// label if the operator saved a change.
+  Future<void> _onUpdateVehicle(BuildContext context, WidgetRef ref) async {
+    final changed = await showDialog<bool>(context: context, builder: (_) => const VehicleSettingsDialog());
+    if (changed == true) {
+      await ref.read(trackingProvider.notifier).refreshSettings();
+    }
+  }
+
+  /// Zips the on-disk logs and hands the archive to the platform share
+  /// sheet. Surfaces a snackbar when there are no logs to share.
+  Future<void> _onShareLogs(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final box = context.findRenderObject() as RenderBox?;
+    final path = await ref.read(trackingProvider.notifier).prepareLogArchive();
+    if (path == null) {
+      messenger.showSnackBar(SnackBar(content: Text(L10n.translate.trackingNoLogsToShare)));
+      return;
+    }
+    final origin = box != null && box.hasSize ? box.localToGlobal(Offset.zero) & box.size : null;
+    await SharePlus.instance.share(
+      ShareParams(files: [XFile(path)], text: L10n.translate.trackingShareLogsText, sharePositionOrigin: origin),
+    );
+  }
+
+  /// Current saved vehicle + capacity, shown beneath the AppBar so the
+  /// operator can confirm what the next run will be tagged with.
+  Widget _settingsLabel(BuildContext context, TrackingState tracking) {
+    final vehicle = tracking.machineTypeName;
+    final capacity = tracking.capacity;
+    final text = (vehicle == null && capacity == null)
+        ? L10n.translate.trackingVehicleNone
+        : L10n.translate.trackingVehicleSummary(vehicle ?? '—', capacity == null ? '—' : _formatCapacity(capacity));
+    return Text(
+      text,
+      key: const Key('trackingVehicleSummary'),
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant),
     );
   }
 
@@ -255,4 +362,9 @@ class TrackingPage extends HookConsumerWidget {
       null => fallback,
     };
   }
+}
+
+String _formatCapacity(num v) {
+  if (v is int || v == v.truncate()) return v.toInt().toString();
+  return v.toString();
 }

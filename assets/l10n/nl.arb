@@ -9,14 +9,17 @@
   "envSwitcherRestartTitle": "Herstart vereist",
   "envSwitcherRestartBody": "Geselecteerde omgeving gewijzigd naar \"{env}\". Sluit en open de app om toe te passen.",
   "commonOk": "OK",
+  "commonCancel": "Annuleren",
 
   "permissionsTitle": "Toestemming",
   "permissionsLocationRationale": "Deze app heeft uw locatie nodig om de locaties bij te houden.",
+  "permissionsLocationRationaleAlways": "Deze app heeft op de achtergrond toegang tot uw locatie nodig om ritten bij te houden, ook wanneer de app niet geopend is.",
   "permissionsNotificationRationale": "Deze app heeft notificaties nodig om te laten zien dat de app bezig is.",
   "permissionsPermanentlyDeniedBody": "Het lijkt erop dat u de locatie toestemming permanent hebt afgewezen…",
   "permissionsAccept": "Accepteer",
   "permissionsClose": "Sluiten",
   "permissionsOpenSettings": "Open instellingen",
+  "permissionsConsentBody": "Geachte gebruiker,\n\nHierbij informeren wij u over het gebruik van onze Track&Trace-app (T&T-app) voor het monitoren van de maatregel voorkeur kleine Kringloop (vKK).\n\nDe T&T-app verzamelt specifieke gegevens, waaronder uw locatie, snelheid, status (maaien, rijden, storten of anders) en de hoeveelheid gestort maaisel. Het verzamelen van deze informatie begint wanneer u op de 'start'-knop drukt en eindigt wanneer u op de 'pauze'- of 'stop'-knop drukt.\n\nWe willen benadrukken dat uw privacy en gegevensbeveiliging onze hoogste prioriteit hebben. De locatiegegevens die worden verzameld, worden uitsluitend gebruikt voor het monitoren van de vKK-maatregel. We zullen deze gegevens niet voor andere doeleinden gebruiken en zullen ze niet delen met derden, tenzij dit wettelijk vereist is.\n\nU heeft te allen tijde de mogelijkheid om het gebruik van locatiegegevens uit te schakelen via de instellingen van de app. Houd er echter rekening mee dat de app dan niet meer naar behoren zal functioneren en niet in staat zal zijn om de vKK-maatregel effectief te monitoren.\n\nDoor deze toestemmingsverklaring te accepteren, geeft u ons toestemming om uw gegevens te gebruiken zoals beschreven in deze verklaring.\n\nMet vriendelijke groet,\n\nWaterschap Vallei en Veluwe",
 
   "setupMachineTypeLabel": "Type kipper/kiepwagen",
   "setupMachineTypeHint": "Selecteer een kipper/kiepwagen",
@@ -51,6 +54,14 @@
   "trackingStoppingRun": "Aan het stoppen",
   "trackingStartingRun": "Aan het opstarten",
   "trackingClickStartToBegin": "Klik op Start om te beginnen",
+  "trackingMenuUpdateVehicle": "Voertuig & inhoud wijzigen",
+  "trackingMenuShareLogs": "Logbestand delen",
+  "trackingSettingsTitle": "Voertuig & inhoud",
+  "trackingSettingsSave": "Opslaan",
+  "trackingVehicleSummary": "{vehicle} · {capacity} m³",
+  "trackingVehicleNone": "Geen voertuig ingesteld",
+  "trackingShareLogsText": "Track & Trace logbestanden",
+  "trackingNoLogsToShare": "Geen logbestanden om te delen.",
 
   "dumpSizeTitle": "Hoeveel wordt er ongeveer gestort?",
   "dumpSizeQuarter": "Kwart bak",
@@ -83,5 +94,6 @@
   "errorHttp": "Serverfout (HTTP {statusCode}). Probeer het later opnieuw.",
   "errorParse": "Onverwacht antwoord van de server.",
   "errorUnknownData": "Er is een onbekende fout opgetreden. Probeer het opnieuw.",
-  "errorGeneric": "Er is iets misgegaan. Probeer het opnieuw."
+  "errorGeneric": "Er is iets misgegaan. Probeer het opnieuw.",
+  "errorCreateRunFailed": "Er is iets misgegaan, probeer het later opnieuw (HttpStatusCode = {statusCode})"
 }
