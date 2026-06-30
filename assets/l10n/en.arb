@@ -133,7 +133,7 @@
   "trackingYes": "Ja",
   "trackingNo": "Nee",
   "trackingStoppingRun": "Aan het stoppen",
-  "trackingStartingRun": "Aan het opstarten",
+  "trackingStartingRun": "Aan het starten",
   "trackingClickStartToBegin": "Klik op Start om te beginnen",
 
   "trackingMenuUpdateVehicle": "Voertuig & inhoud wijzigen",
@@ -143,6 +143,10 @@
   "trackingMenuShareLogs": "Logbestand delen",
   "@trackingMenuShareLogs": {
     "description": "Tracking screen — AppBar overflow item that shares the zipped log files via the OS share sheet."
+  },
+  "trackingMenuOpenLogs": "Logboek openen",
+  "@trackingMenuOpenLogs": {
+    "description": "Tracking screen — AppBar overflow item that opens the in-app Logarte debug console (log viewer + network inspector)."
   },
   "trackingSettingsTitle": "Voertuig & inhoud",
   "@trackingSettingsTitle": {

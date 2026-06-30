@@ -7,8 +7,8 @@ import 'package:equatable/equatable.dart';
 /// active iff [runId] is non-null (LocationService + SendingService +
 /// PredictionService are all running). [predictedState] is the latest
 /// activity from PredictionService polling `/get-status`; [feedbackState]
-/// is the operator-confirmed activity from the 4-way grid (the
-/// `_selectedFeedbackIndex` is implicit via the enum's `.index` order).
+/// is the operator-confirmed activity from the 4-way grid (the selected
+/// button is the one whose [ActivityState] equals [feedbackState]).
 ///
 /// [shownDumpsizeDialogThisDump] is the one-dump-per-cycle guard: set when
 /// the dump dialog is shown for a DUMPING transition, cleared when the
@@ -20,6 +20,11 @@ import 'package:equatable/equatable.dart';
 /// edit). They drive the settings label in the AppBar area and are
 /// independent of the run lifecycle — editing them mid-run changes only the
 /// *next* run, never the active one.
+///
+/// [starting] and [stopping] are the transient in-progress flags for the
+/// run lifecycle: [starting] is true while `/create-run` is in flight (the
+/// Start button is disabled and reads "Aan het starten"); [stopping] is true
+/// while `/stop-run` is in flight (the Stop button reads "Aan het stoppen").
 class TrackingState(
   final String? runId,
   final ActivityState? predictedState,
@@ -27,15 +32,14 @@ class TrackingState(
   final NearestDepot? nearestDepot,
   final bool shownDumpsizeDialogThisDump,
   final bool stopping,
+  final bool starting,
   final Object? startError,
   final String? machineTypeName,
   final num? capacity,
 ) extends Equatable {
-  static final TrackingState initial = TrackingState(null, null, null, null, false, false, null, null, null);
+  static final TrackingState initial = TrackingState(null, null, null, null, false, false, false, null, null, null);
 
   bool get isTracking => runId != null;
-
-  int get selectedFeedbackIndex => feedbackState == null ? -1 : feedbackState!.index;
 
   TrackingState copyWith({
     String? runId,
@@ -48,6 +52,7 @@ class TrackingState(
     bool clearNearestDepot = false,
     bool? shownDumpsizeDialogThisDump,
     bool? stopping,
+    bool? starting,
     Object? startError,
     bool clearStartError = false,
     String? machineTypeName,
@@ -59,6 +64,7 @@ class TrackingState(
     clearNearestDepot ? null : (nearestDepot ?? this.nearestDepot),
     shownDumpsizeDialogThisDump ?? this.shownDumpsizeDialogThisDump,
     stopping ?? this.stopping,
+    starting ?? this.starting,
     clearStartError ? null : (startError ?? this.startError),
     machineTypeName ?? this.machineTypeName,
     capacity ?? this.capacity,
@@ -72,6 +78,7 @@ class TrackingState(
     nearestDepot,
     shownDumpsizeDialogThisDump,
     stopping,
+    starting,
     startError,
     machineTypeName,
     capacity,

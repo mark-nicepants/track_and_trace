@@ -29,7 +29,7 @@ android {
 
     buildTypes {
         release {
-    //TODO
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 }

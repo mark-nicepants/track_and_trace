@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app/domain/entities/activity_state.dart';
+import 'package:app/shared/logarte.dart';
 import 'package:app/ui/features/main/main_page.dart';
 import 'package:app/ui/features/tracking/dump_size_dialog.dart';
 import 'package:app/ui/features/tracking/dump_size_notifier.dart';
@@ -15,11 +16,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 /// Actions surfaced in the tracking screen's AppBar overflow (3-dot) menu.
-enum _TrackingMenuAction { updateVehicle, shareLogs }
+enum _TrackingMenuAction { updateVehicle, openLogConsole }
 
 /// The driver-facing tracking screen. Owns the entire run lifecycle via
 /// [TrackingNotifier]: mounting kicks off `/create-run` + LocationService +
@@ -148,24 +148,24 @@ class TrackingPage extends HookConsumerWidget {
                 switch (action) {
                   case _TrackingMenuAction.updateVehicle:
                     unawaited(_onUpdateVehicle(context, ref));
-                  case _TrackingMenuAction.shareLogs:
-                    unawaited(_onShareLogs(context, ref));
+                  case _TrackingMenuAction.openLogConsole:
+                    unawaited(_onOpenLogConsole(context));
                 }
               },
               itemBuilder: (_) => [
+                // PopupMenuItem<_TrackingMenuAction>(
+                //   key: const Key('trackingMenuUpdateVehicle'),
+                //   value: _TrackingMenuAction.updateVehicle,
+                //   // Locked while a run is active: the active run already
+                //   // captured its vehicle/capacity, so editing mid-run would
+                //   // be misleading. The operator stops first, then edits.
+                //   enabled: !tracking.isTracking,
+                //   child: Text(L10n.translate.trackingMenuUpdateVehicle),
+                // ),
                 PopupMenuItem<_TrackingMenuAction>(
-                  key: const Key('trackingMenuUpdateVehicle'),
-                  value: _TrackingMenuAction.updateVehicle,
-                  // Locked while a run is active: the active run already
-                  // captured its vehicle/capacity, so editing mid-run would
-                  // be misleading. The operator stops first, then edits.
-                  enabled: !tracking.isTracking,
-                  child: Text(L10n.translate.trackingMenuUpdateVehicle),
-                ),
-                PopupMenuItem<_TrackingMenuAction>(
-                  key: const Key('trackingMenuShareLogs'),
-                  value: _TrackingMenuAction.shareLogs,
-                  child: Text(L10n.translate.trackingMenuShareLogs),
+                  key: const Key('trackingMenuOpenLogs'),
+                  value: _TrackingMenuAction.openLogConsole,
+                  child: Text(L10n.translate.trackingMenuOpenLogs),
                 ),
               ],
             ),
@@ -203,20 +203,10 @@ class TrackingPage extends HookConsumerWidget {
     }
   }
 
-  /// Zips the on-disk logs and hands the archive to the platform share
-  /// sheet. Surfaces a snackbar when there are no logs to share.
-  Future<void> _onShareLogs(BuildContext context, WidgetRef ref) async {
-    final messenger = ScaffoldMessenger.of(context);
-    final box = context.findRenderObject() as RenderBox?;
-    final path = await ref.read(trackingProvider.notifier).prepareLogArchive();
-    if (path == null) {
-      messenger.showSnackBar(SnackBar(content: Text(L10n.translate.trackingNoLogsToShare)));
-      return;
-    }
-    final origin = box != null && box.hasSize ? box.localToGlobal(Offset.zero) & box.size : null;
-    await SharePlus.instance.share(
-      ShareParams(files: [XFile(path)], text: L10n.translate.trackingShareLogsText, sharePositionOrigin: origin),
-    );
+  /// Opens Logarte's in-app debug console (log viewer + network inspector).
+  Future<void> _onOpenLogConsole(BuildContext context) async {
+    await logarte.openConsole(context);
+    logarte.detachOverlay();
   }
 
   /// Current saved vehicle + capacity, shown beneath the AppBar so the
@@ -282,7 +272,6 @@ class TrackingPage extends HookConsumerWidget {
       (ActivityState.dumping, L10n.translate.trackingActivityDumping),
       (ActivityState.standingStill, L10n.translate.trackingActivityStandingStill),
     ];
-    final selectedIndex = tracking.selectedFeedbackIndex;
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -293,7 +282,11 @@ class TrackingPage extends HookConsumerWidget {
       itemCount: activities.length,
       itemBuilder: (context, index) {
         final (state, label) = activities[index];
-        final selected = selectedIndex == index;
+        // Match on the activity itself, not on a positional index: the grid's
+        // order (driving, loading, …) differs from ActivityState's enum order
+        // (loading, driving, …), so comparing indices highlighted the wrong
+        // button.
+        final selected = tracking.feedbackState == state;
         return OutlinedButton(
           key: Key('feedback_$index'),
           onPressed: tracking.isTracking ? () => notifier.selectFeedback(selected ? null : state) : null,
@@ -310,21 +303,26 @@ class TrackingPage extends HookConsumerWidget {
   }
 
   Widget _stopButton(BuildContext context, TrackingState tracking, TrackingNotifier notifier) {
-    // Determine button state and action based on tracking status
-    final isStarting = !tracking.isTracking && !tracking.stopping;
+    // The button is the Start button until a run is active (and while it's
+    // still spinning up); it becomes the Stop button once tracking begins.
+    final isStartButton = !tracking.isTracking && !tracking.stopping;
+    // A run transition is in flight: disable the button and show progress.
+    final inProgress = tracking.starting || tracking.stopping;
     final labelKey = tracking.stopping
         ? L10n.translate.trackingStoppingRun
+        : tracking.starting
+        ? L10n.translate.trackingStartingRun
         : tracking.isTracking
         ? L10n.translate.trackingStop
         : L10n.translate.trackingStart;
 
     return FilledButton(
-      key: Key(isStarting ? 'startButton' : 'stopButton'),
-      onPressed: tracking.stopping
+      key: Key(isStartButton ? 'startButton' : 'stopButton'),
+      onPressed: inProgress
           ? null
-          : isStarting
-          ? () => unawaited(notifier.start())
-          : () => unawaited(_confirmStop(context, notifier)),
+          : tracking.isTracking
+          ? () => unawaited(_confirmStop(context, notifier))
+          : () => unawaited(notifier.start()),
       child: Text(labelKey, style: const TextStyle(fontSize: 22)),
     );
   }

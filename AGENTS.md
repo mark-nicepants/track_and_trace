@@ -2,7 +2,7 @@
 
 Orientation for AI coding agents working in this repository. Pair this with
 [`ARCHITECTURE.md`](./ARCHITECTURE.md) — that file is the source of truth for
-*how* the codebase is built. This file covers *how to work in it* without
+_how_ the codebase is built. This file covers _how to work in it_ without
 duplicating that content.
 
 If anything here conflicts with `ARCHITECTURE.md`, the architecture doc wins.
@@ -24,7 +24,7 @@ make run         # uses persisted env or `prod` as fallback
 
 > **Important — two pieces of tooling friction:**
 >
-> 1. **Flutter version is pinned to 3.44.1 via FVM** (`.fvmrc`). All Flutter
+> 1. **Flutter version is pinned to 3.44.4 via FVM** (`.fvmrc`). All Flutter
 >    and Dart commands must be routed through `fvm` (`fvm flutter`,
 >    `fvm dart`). The Makefile and lefthook do this automatically.
 > 2. **Primary constructors are an experimental Dart feature** requiring

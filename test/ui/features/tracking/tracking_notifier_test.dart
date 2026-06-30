@@ -109,12 +109,56 @@ void main() {
     final state = container.read(trackingProvider);
     expect(state.runId, 'run-1');
     expect(state.isTracking, isTrue);
+    expect(state.starting, isFalse);
     expect(await prefs.readString(exitedCorrectlyKey), 'false');
     expect(foreground.isRunning, isTrue);
     expect(sending.isRunning, isTrue);
     expect(prediction.isRunning, isTrue);
     expect(prediction.startedRunId, 'run-1');
     expect(client.isActive, isTrue);
+  });
+
+  test('start() flips starting=true while /create-run is in flight, then clears it on success', () async {
+    await seedSetup();
+    adapter.onPost(
+      '/create-run',
+      (server) => server.reply(200, {'runId': 'run-slow'}, delay: const Duration(milliseconds: 100)),
+      data: Matchers.any,
+    );
+    final container = makeContainer();
+    final notifier = container.read(trackingProvider.notifier);
+
+    final pending = notifier.start();
+    // /create-run is still in flight (100 ms delay) — the screen shows the
+    // "Aan het starten" state here.
+    await Future<void>.delayed(const Duration(milliseconds: 30));
+    expect(container.read(trackingProvider).starting, isTrue);
+    expect(container.read(trackingProvider).isTracking, isFalse);
+
+    await pending;
+    final state = container.read(trackingProvider);
+    expect(state.starting, isFalse);
+    expect(state.isTracking, isTrue);
+    expect(state.runId, 'run-slow');
+  });
+
+  test('start() ignores a re-entrant call while a run is already starting', () async {
+    await seedSetup();
+    adapter.onPost(
+      '/create-run',
+      (server) => server.reply(200, {'runId': 'run-1'}, delay: const Duration(milliseconds: 100)),
+      data: Matchers.any,
+    );
+    final container = makeContainer();
+    final notifier = container.read(trackingProvider.notifier);
+
+    final first = notifier.start();
+    await Future<void>.delayed(const Duration(milliseconds: 30)); // starting == true
+    await notifier.start(); // must be a no-op
+    await first;
+
+    expect(prediction.startCallCount, 1);
+    expect(client.watchCallCount, 1);
   });
 
   test('start() is a no-op when setup prefs are missing', () async {
@@ -139,6 +183,7 @@ void main() {
     final state = container.read(trackingProvider);
     expect(state.runId, isNull);
     expect(state.isTracking, isFalse);
+    expect(state.starting, isFalse);
     expect(state.startError, isNotNull);
     expect(httpStatusCodeOf(state.startError!), 503);
     expect(await prefs.readString(exitedCorrectlyKey), 'true');
@@ -178,7 +223,10 @@ void main() {
     final ok = await notifier.stop();
 
     expect(ok, isTrue);
-    expect(container.read(trackingProvider), TrackingState.initial);
+    final state = container.read(trackingProvider);
+    expect(state.isTracking, isFalse);
+    expect(state.runId, isNull);
+    expect(state.feedbackState, isNull);
     expect(await prefs.readString(exitedCorrectlyKey), 'true');
     expect(foreground.isRunning, isFalse);
     expect(sending.isRunning, isFalse);
@@ -197,8 +245,30 @@ void main() {
     final ok = await notifier.stop();
 
     expect(ok, isFalse);
-    expect(container.read(trackingProvider), TrackingState.initial);
+    expect(container.read(trackingProvider).isTracking, isFalse);
     expect(foreground.isRunning, isFalse);
+  });
+
+  test('stop() preserves the saved vehicle/capacity for the settings label', () async {
+    // Regression: stop() used to reset to TrackingState.initial, wiping the
+    // vehicle/capacity. Because trackingProvider is keep-alive, build() (and
+    // its settings load) never re-ran on a later visit, so the label fell
+    // back to trackingVehicleNone even though a vehicle was still saved.
+    await seedSetup(capacity: 12.5); // persists displayName 'Loader'
+    replyCreateRun();
+    replyStopRunOk();
+    final container = makeContainer();
+    final notifier = container.read(trackingProvider.notifier);
+    await Future<void>.delayed(const Duration(milliseconds: 10)); // let _loadSettings run
+
+    await notifier.start();
+    await notifier.stop();
+
+    final state = container.read(trackingProvider);
+    expect(state.isTracking, isFalse);
+    expect(state.runId, isNull);
+    expect(state.machineTypeName, 'Loader');
+    expect(state.capacity, 12.5);
   });
 
   test('start() is idempotent: a second call while running is a no-op', () async {
@@ -277,7 +347,6 @@ void main() {
 
     final s1 = container.read(trackingProvider);
     expect(s1.feedbackState, ActivityState.driving);
-    expect(s1.selectedFeedbackIndex, ActivityState.driving.index);
 
     // Wait for the immediate depot fetch to land.
     await Future<void>.delayed(const Duration(milliseconds: 30));
@@ -316,7 +385,6 @@ void main() {
 
     notifier.selectFeedback(ActivityState.loading);
     expect(container.read(trackingProvider).feedbackState, isNull);
-    expect(container.read(trackingProvider).selectedFeedbackIndex, -1);
   });
 
   test('selectFeedback is a no-op when no run is active', () async {

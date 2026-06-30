@@ -83,11 +83,15 @@ class TrackingNotifier extends Notifier<TrackingState> {
   /// Idempotent — re-entrant calls while a run is already active are
   /// no-ops.
   Future<void> start() async {
-    if (state.isTracking) return;
+    if (state.isTracking || state.starting) return;
 
     final saved = await _readSavedMachine();
     if (saved == null) return;
     final (machineTypeId, capacity) = saved;
+
+    // Flip into the "starting" state so the screen can disable the Start
+    // button and show "Aan het starten" while `/create-run` is in flight.
+    state = state.copyWith(starting: true);
 
     await _prefs.writeString(exitedCorrectlyKey, 'false');
 
@@ -99,7 +103,7 @@ class TrackingNotifier extends Notifier<TrackingState> {
       // can re-prime crash detection, and surface the failure so the
       // screen can show a dialog with the HTTP status code.
       await _prefs.writeString(exitedCorrectlyKey, 'true');
-      state = state.copyWith(startError: e);
+      state = state.copyWith(starting: false, startError: e);
       return;
     }
 
@@ -116,7 +120,7 @@ class TrackingNotifier extends Notifier<TrackingState> {
     _predictionSub = _prediction.predictions.listen(_onPrediction);
     await _prediction.start(runId);
 
-    state = state.copyWith(runId: runId);
+    state = state.copyWith(runId: runId, starting: false);
   }
 
   /// Stops the run: cancels GPS + prediction, flushes pending queue
@@ -151,7 +155,11 @@ class TrackingNotifier extends Notifier<TrackingState> {
 
     await _prefs.writeString(exitedCorrectlyKey, 'true');
 
-    state = TrackingState.initial;
+    // Clear run-specific state but keep the saved vehicle/capacity: they are
+    // independent of the run lifecycle (see TrackingState doc). Wiping them
+    // here left the settings label showing `trackingVehicleNone` when the
+    // (keep-alive) provider was reused on a later visit to the screen.
+    state = TrackingState.initial.copyWith(machineTypeName: state.machineTypeName, capacity: state.capacity);
     return success;
   }
 

@@ -40,6 +40,7 @@ dependencies:
   # Utilities
   equatable: ^2.0.5
   logger: ^2.4.0
+  logarte: ^1.4.1
   archive: ^4.0.2
   share_plus: ^13.2.0
 
